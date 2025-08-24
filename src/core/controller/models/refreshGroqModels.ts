@@ -7,6 +7,7 @@ import fs from "fs/promises"
 import path from "path"
 import { telemetryService } from "@/services/posthog/PostHogClientProvider"
 import { groqModels } from "../../../shared/api"
+import { numberToString } from "../../../shared/proto-conversions/type-utils"
 import { Controller } from ".."
 
 /**
@@ -27,8 +28,8 @@ export async function refreshGroqModels(controller: Controller, _request: EmptyR
 			// Don't throw an error, just use static models
 			for (const [modelId, modelInfo] of Object.entries(groqModels)) {
 				models[modelId] = {
-					maxTokens: modelInfo.maxTokens,
-					contextWindow: modelInfo.contextWindow,
+					maxTokens: numberToString(modelInfo.maxTokens),
+					contextWindow: numberToString(modelInfo.contextWindow),
 					supportsImages: modelInfo.supportsImages,
 					supportsPromptCache: modelInfo.supportsPromptCache,
 					inputPrice: modelInfo.inputPrice,
@@ -69,8 +70,8 @@ export async function refreshGroqModels(controller: Controller, _request: EmptyR
 					const staticModelInfo = groqModels[rawModel.id as keyof typeof groqModels]
 
 					const modelInfo: Partial<OpenRouterModelInfo> = {
-						maxTokens: rawModel.max_completion_tokens || staticModelInfo?.maxTokens || 8192,
-						contextWindow: rawModel.context_window || staticModelInfo?.contextWindow || 8192,
+						maxTokens: numberToString(rawModel.max_completion_tokens || staticModelInfo?.maxTokens || 8192),
+						contextWindow: numberToString(rawModel.context_window || staticModelInfo?.contextWindow || 8192),
 						supportsImages: detectImageSupport(rawModel, staticModelInfo),
 						supportsPromptCache: staticModelInfo?.supportsPromptCache || false,
 						inputPrice: staticModelInfo?.inputPrice || 0,
@@ -126,8 +127,8 @@ export async function refreshGroqModels(controller: Controller, _request: EmptyR
 			console.log("Using static Groq models as fallback")
 			for (const [modelId, modelInfo] of Object.entries(groqModels)) {
 				models[modelId] = {
-					maxTokens: modelInfo.maxTokens,
-					contextWindow: modelInfo.contextWindow,
+					maxTokens: numberToString(modelInfo.maxTokens),
+					contextWindow: numberToString(modelInfo.contextWindow),
 					supportsImages: modelInfo.supportsImages,
 					supportsPromptCache: modelInfo.supportsPromptCache,
 					inputPrice: modelInfo.inputPrice,
@@ -145,8 +146,8 @@ export async function refreshGroqModels(controller: Controller, _request: EmptyR
 	const typedModels: Record<string, OpenRouterModelInfo> = {}
 	for (const [key, model] of Object.entries(models)) {
 		typedModels[key] = {
-			maxTokens: model.maxTokens ?? 8192,
-			contextWindow: model.contextWindow ?? 8192,
+			maxTokens: model.maxTokens ?? numberToString(8192),
+			contextWindow: model.contextWindow ?? numberToString(8192),
 			supportsImages: model.supportsImages ?? false,
 			supportsPromptCache: model.supportsPromptCache ?? false,
 			inputPrice: model.inputPrice ?? 0,

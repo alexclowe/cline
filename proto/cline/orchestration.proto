@@ -1,0 +1,150 @@
+syntax = "proto3";
+
+package cline;
+import "cline/common.proto";
+option java_package = "bot.cline.proto";
+option java_multiple_files = true;
+
+service OrchestrationService {
+  // Gets orchestration configuration and status
+  rpc getOrchestrationStatus(EmptyRequest) returns (OrchestrationStatus);
+  // Updates orchestration configuration
+  rpc updateOrchestrationConfig(OrchestrationConfigRequest) returns (Empty);
+  // Orchestrates a task using Claude-Flow system
+  rpc orchestrateTask(OrchestrationTaskRequest) returns (OrchestrationResult);
+  // Cancels an active orchestration task
+  rpc cancelOrchestrationTask(StringRequest) returns (Boolean);
+  // Gets orchestration metrics
+  rpc getOrchestrationMetrics(EmptyRequest) returns (OrchestrationMetrics);
+  // Resets orchestration metrics
+  rpc resetOrchestrationMetrics(EmptyRequest) returns (Empty);
+  // Gets health status of orchestration system
+  rpc getOrchestrationHealth(EmptyRequest) returns (OrchestrationHealth);
+  // Gets list of active orchestration tasks
+  rpc getActiveOrchestrationTasks(EmptyRequest) returns (ActiveOrchestrationTasksArray);
+}
+
+// Request for orchestrating a task
+message OrchestrationTaskRequest {
+  Metadata metadata = 1;
+  string task_description = 2;
+  OrchestrationMode mode = 3;
+  repeated string images = 4;
+  repeated string files = 5;
+}
+
+// Request for updating orchestration configuration
+message OrchestrationConfigRequest {
+  Metadata metadata = 1;
+  bool enabled = 2;
+  int32 max_concurrent_agents = 3;
+  int64 max_memory_usage = 4;
+  int32 timeout_minutes = 5;
+  bool fallback_to_single_agent = 6;
+  bool debug_mode = 7;
+  bool auto_optimization = 8;
+  bool resource_monitoring = 9;
+  double complexity_threshold = 10;
+}
+
+// Orchestration modes
+enum OrchestrationMode {
+  ORCHESTRATION_DISABLED = 0;
+  ORCHESTRATION_ANALYSIS_ONLY = 1;
+  ORCHESTRATION_SINGLE_AGENT_FALLBACK = 2;
+  ORCHESTRATION_FULL_ORCHESTRATION = 3;
+  ORCHESTRATION_ADAPTIVE = 4;
+}
+
+// Orchestration status response
+message OrchestrationStatus {
+  bool enabled = 1;
+  OrchestrationMode current_mode = 2;
+  OrchestrationMetrics metrics = 3;
+  OrchestrationHealth health = 4;
+  repeated ActiveOrchestrationTask active_tasks = 5;
+  OrchestrationConfig config = 6;
+}
+
+// Orchestration configuration
+message OrchestrationConfig {
+  bool enabled = 1;
+  int32 max_concurrent_agents = 2;
+  int64 max_memory_usage = 3;
+  int32 timeout_minutes = 4;
+  bool fallback_to_single_agent = 5;
+  bool debug_mode = 6;
+  bool auto_optimization = 7;
+  bool resource_monitoring = 8;
+  double complexity_threshold = 9;
+}
+
+// Orchestration result
+message OrchestrationResult {
+  bool success = 1;
+  string task_id = 2;
+  string plan_id = 3;
+  repeated OrchestrationAgent agents = 4;
+  int64 execution_time = 5;
+  OrchestrationResourceUsage resource_usage = 6;
+  string error = 7;
+  repeated string warnings = 8;
+}
+
+// Orchestration agent information
+message OrchestrationAgent {
+  string id = 1;
+  string type = 2;
+  string status = 3;
+  int64 created_at = 4;
+}
+
+// Resource usage information
+message OrchestrationResourceUsage {
+  int64 memory_used = 1;
+  int64 cpu_time = 2;
+  int32 api_calls = 3;
+  int32 tokens_used = 4;
+  int32 network_requests = 5;
+}
+
+// Orchestration metrics
+message OrchestrationMetrics {
+  int32 total_tasks = 1;
+  int32 successful_tasks = 2;
+  int32 failed_tasks = 3;
+  double average_execution_time = 4;
+  double average_agents_used = 5;
+  double efficiency = 6;
+  map<string, int32> coordination_strategy_usage = 7;
+  map<string, int32> agent_type_usage = 8;
+}
+
+// Orchestration health status
+message OrchestrationHealth {
+  bool is_healthy = 1;
+  int32 active_tasks = 2;
+  int64 memory_usage = 3;
+  int64 max_memory_usage = 4;
+  double efficiency = 5;
+  int64 uptime = 6;
+  repeated string issues = 7;
+  repeated string recommendations = 8;
+}
+
+// Active orchestration task
+message ActiveOrchestrationTask {
+  string id = 1;
+  string description = 2;
+  string status = 3;
+  int32 agent_count = 4;
+  int64 start_time = 5;
+  OrchestrationMode mode = 6;
+  double complexity_score = 7;
+}
+
+// Array of active orchestration tasks
+message ActiveOrchestrationTasksArray {
+  repeated ActiveOrchestrationTask tasks = 1;
+  int32 total_count = 2;
+}

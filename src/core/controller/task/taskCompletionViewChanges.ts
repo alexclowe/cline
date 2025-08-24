@@ -1,4 +1,5 @@
 import { Empty, Int64Request } from "@shared/proto/cline/common"
+import { stringToNumber } from "../../../shared/proto-conversions/type-utils"
 import { Controller } from ".."
 
 /**
@@ -10,7 +11,7 @@ import { Controller } from ".."
 export async function taskCompletionViewChanges(controller: Controller, request: Int64Request): Promise<Empty> {
 	try {
 		if (request.value && controller.task) {
-			await controller.task.presentMultifileDiff(request.value, true)
+			await controller.task.presentMultifileDiff(stringToNumber(request.value) || 0, true)
 		}
 		return Empty.create()
 	} catch (error) {

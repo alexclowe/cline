@@ -1,0 +1,33 @@
+version: v2
+managed:
+  enabled: true
+plugins:
+  - local: ./node_modules/ts-proto/protoc-gen-ts_proto
+    out: src/shared/proto
+    opt:
+      - env=node
+      - esModuleInterop=true
+      - outputServices=generic-definitions
+      - outputIndex=true
+      - useOptionals=messages
+      - useDate=false
+  - local: ./node_modules/ts-proto/protoc-gen-ts_proto
+    out: src/generated/grpc-js
+    opt:
+      - env=node
+      - esModuleInterop=true
+      - outputServices=grpc-js
+      - outputClientImpl=false
+      - outputIndex=true
+      - useOptionals=messages
+      - useDate=false
+  - local: ./node_modules/ts-proto/protoc-gen-ts_proto
+    out: src/generated/nice-grpc
+    opt:
+      - env=node
+      - esModuleInterop=true
+      - outputServices=nice-grpc
+      - useExactTypes=false
+      - outputIndex=true
+      - useOptionals=messages
+      - useDate=false

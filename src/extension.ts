@@ -156,6 +156,78 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand("cline.popoutButtonClicked", openClineInNewTab))
 	context.subscriptions.push(vscode.commands.registerCommand("cline.openInNewTab", openClineInNewTab))
 
+	// Enhanced Claude-Flow integration commands
+	context.subscriptions.push(
+		vscode.commands.registerCommand("cline.enhancedTask", async () => {
+			const activeInstance = WebviewProvider.getActiveInstance()
+			if (activeInstance?.controller) {
+				const orchestrationStatus = activeInstance.controller.getOrchestrationStatus()
+				if (orchestrationStatus.enabled) {
+					// Show orchestration-enhanced task creation
+					await vscode.commands.executeCommand("cline.plusButtonClicked")
+				} else {
+					vscode.window
+						.showInformationMessage(
+							"Claude-Flow orchestration is not enabled. Enable it in settings to use enhanced task coordination.",
+							"Open Settings",
+						)
+						.then((selection) => {
+							if (selection === "Open Settings") {
+								vscode.commands.executeCommand("workbench.action.openSettings", "cline.orchestration")
+							}
+						})
+				}
+			}
+		}),
+	)
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand("cline.orchestrationControl", async () => {
+			const activeInstance = WebviewProvider.getActiveInstance()
+			if (activeInstance?.controller) {
+				const status = activeInstance.controller.getOrchestrationStatus()
+
+				if (status.enabled) {
+					// Show orchestration control panel information
+					const activeTasks = status.activeTasks?.length || 0
+					const efficiency = status.metrics?.efficiency || 0
+
+					const message = `Orchestration Status:
+• Active Tasks: ${activeTasks}
+• Efficiency: ${(efficiency * 100).toFixed(1)}%
+• Total Tasks: ${status.metrics?.totalTasks || 0}
+• Successful: ${status.metrics?.successfulTasks || 0}`
+
+					const actions = activeTasks > 0 ? ["View Details", "Settings"] : ["Settings"]
+
+					const selection = await vscode.window.showInformationMessage(message, ...actions)
+
+					if (selection === "Settings") {
+						vscode.commands.executeCommand("workbench.action.openSettings", "cline.orchestration")
+					} else if (selection === "View Details") {
+						// Future: Open orchestration dashboard
+						vscode.window.showInformationMessage("Orchestration dashboard coming soon!")
+					}
+				} else {
+					const selection = await vscode.window.showInformationMessage(
+						"Claude-Flow orchestration is not enabled. Would you like to enable it?",
+						"Enable",
+						"Settings",
+					)
+
+					if (selection === "Enable") {
+						// Enable orchestration in settings
+						const config = vscode.workspace.getConfiguration("cline.orchestration")
+						await config.update("enabled", true, vscode.ConfigurationTarget.Global)
+						vscode.window.showInformationMessage("Claude-Flow orchestration enabled!")
+					} else if (selection === "Settings") {
+						vscode.commands.executeCommand("workbench.action.openSettings", "cline.orchestration")
+					}
+				}
+			}
+		}),
+	)
+
 	context.subscriptions.push(
 		vscode.commands.registerCommand("cline.settingsButtonClicked", (webview: any) => {
 			const isSidebar = !webview

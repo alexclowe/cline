@@ -33,12 +33,14 @@ describe("ClineIgnoreController", () => {
 
 	describe("Default Patterns", () => {
 		// it("should block access to common ignored files", async () => {
-		// 	const results = [
-		// 		controller.validateAccess(".env"),
-		// 		controller.validateAccess(".git/config"),
-		// 		controller.validateAccess("node_modules/package.json"),
-		// 	]
-		// 	results.forEach((result) => result.should.be.false())
+		// const results = [
+		// controller.validateAccess(".env"),
+		// controller.validateAccess(".git/config"),
+		// controller.validateAccess("node_modules/package.json"),
+		// ]
+		// for (const result of results) {
+		// result.should.be.false()
+		// }
 		// })
 
 		it("should allow access to regular files", async () => {
@@ -47,7 +49,9 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("README.md"),
 				controller.validateAccess("package.json"),
 			]
-			results.forEach((result) => result.should.be.true())
+			for (const result of results) {
+				result.should.be.true()
+			}
 		})
 
 		it("should block access to .clineignore file", async () => {
@@ -65,7 +69,9 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("nested/deep/file.secret"),
 				controller.validateAccess("private/nested/deep/file.txt"),
 			]
-			results.forEach((result) => result.should.be.false())
+			for (const result of results) {
+				result.should.be.false()
+			}
 		})
 
 		it("should allow access to non-ignored files", async () => {
@@ -76,7 +82,9 @@ describe("ClineIgnoreController", () => {
 				controller.validateAccess("nested/deep/file.txt"),
 				controller.validateAccess("not-private/data.txt"),
 			]
-			results.forEach((result) => result.should.be.true())
+			for (const result of results) {
+				result.should.be.true()
+			}
 		})
 
 		it("should handle pattern edge cases", async () => {

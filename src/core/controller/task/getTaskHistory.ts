@@ -95,9 +95,9 @@ export async function getTaskHistory(controller: Controller, request: GetTaskHis
 		const tasks = filteredTasks.map((item) => ({
 			id: item.id,
 			task: item.task,
-			ts: item.ts,
+			ts: String(item.ts),
 			isFavorited: item.isFavorited || false,
-			size: item.size || 0,
+			size: String(item.size || 0),
 			totalCost: item.totalCost || 0,
 			tokensIn: item.tokensIn || 0,
 			tokensOut: item.tokensOut || 0,

@@ -3,6 +3,7 @@ import { Empty } from "@shared/proto/cline/common"
 import pWaitFor from "p-wait-for"
 import { HostProvider } from "@/hosts/host-provider"
 import { ShowMessageType } from "@/shared/proto/index.host"
+import { stringToNumber } from "../../../shared/proto-conversions/type-utils"
 import { ClineCheckpointRestore } from "../../../shared/WebviewMessage"
 import { Controller } from ".."
 
@@ -23,7 +24,11 @@ export async function checkpointRestore(controller: Controller, request: Checkpo
 		})
 
 		// NOTE: cancelTask awaits abortTask, which awaits diffViewProvider.revertChanges, which reverts any edited files, allowing us to reset to a checkpoint rather than running into a state where the revertChanges function is called alongside or after the checkpoint reset
-		await controller.task?.restoreCheckpoint(request.number, request.restoreType as ClineCheckpointRestore, request.offset)
+		await controller.task?.restoreCheckpoint(
+			stringToNumber(request.number) || 0,
+			request.restoreType as ClineCheckpointRestore,
+			stringToNumber(request.offset),
+		)
 	}
 	return Empty.create({})
 }

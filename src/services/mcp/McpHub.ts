@@ -636,7 +636,9 @@ export class McpHub {
 	}
 
 	private removeAllFileWatchers() {
-		this.fileWatchers.forEach((watcher) => watcher.close())
+		for (const [_, watcher] of this.fileWatchers) {
+			watcher.close()
+		}
 		this.fileWatchers.clear()
 	}
 
@@ -874,7 +876,31 @@ export class McpHub {
 
 			return {
 				...result,
-				content: result.content ?? [],
+				content: (result.content ?? []) as Array<
+					| {
+							type: "text"
+							text: string
+					  }
+					| {
+							type: "image"
+							data: string
+							mimeType: string
+					  }
+					| {
+							type: "audio"
+							data: string
+							mimeType: string
+					  }
+					| {
+							type: "resource"
+							resource: {
+								uri: string
+								mimeType?: string
+								text?: string
+								blob?: string
+							}
+					  }
+				>,
 			}
 		} catch (error) {
 			this.telemetryService.captureMcpToolCall(
@@ -1153,6 +1179,8 @@ export class McpHub {
 		if (this.settingsWatcher) {
 			await this.settingsWatcher.close()
 		}
-		this.disposables.forEach((d) => d.dispose())
+		for (const d of this.disposables) {
+			d.dispose()
+		}
 	}
 }
