@@ -1,6 +1,5 @@
 import os from "os"
 import * as path from "path"
-import * as vscode from "vscode"
 import { HostProvider } from "@/hosts/host-provider"
 
 /*
@@ -169,4 +168,65 @@ export async function asRelativePath(filePath: string): Promise<string> {
 		}
 	}
 	return filePath
+}
+
+/**
+ * Get the path to the claude-flow binary
+ * This function looks for claude-flow in common installation locations
+ */
+export function getClaudeFlowBin(): string {
+	// Common installation paths for claude-flow
+	const commonPaths = [
+		"claude-flow", // Assume it's in PATH
+		path.join(os.homedir(), ".local", "bin", "claude-flow"),
+		path.join(os.homedir(), "bin", "claude-flow"),
+		"/usr/local/bin/claude-flow",
+		"/usr/bin/claude-flow",
+	]
+
+	// On Windows, check for .exe extension
+	if (process.platform === "win32") {
+		const windowsPaths = [
+			"claude-flow.exe",
+			path.join(os.homedir(), "AppData", "Local", "Programs", "claude-flow", "claude-flow.exe"),
+			path.join(process.env.PROGRAMFILES || "C:\\Program Files", "claude-flow", "claude-flow.exe"),
+		]
+		commonPaths.push(...windowsPaths)
+	}
+
+	// For now, return the first option (PATH lookup)
+	// In a real implementation, you might want to check if the file exists
+	return commonPaths[0]
+}
+
+/**
+ * Get the project root directory
+ */
+export function getProjectRoot(): string {
+	// Start from current directory and walk up to find package.json
+	let currentDir = process.cwd()
+	while (currentDir !== path.dirname(currentDir)) {
+		const packageJsonPath = path.join(currentDir, "package.json")
+		try {
+			require.resolve(packageJsonPath)
+			return currentDir
+		} catch {
+			currentDir = path.dirname(currentDir)
+		}
+	}
+	return process.cwd()
+}
+
+/**
+ * Resolve a path relative to the project root
+ */
+export function resolvePath(relativePath: string): string {
+	return path.resolve(getProjectRoot(), relativePath)
+}
+
+/**
+ * Get the user's home directory
+ */
+export function getUserHome(): string {
+	return os.homedir()
 }

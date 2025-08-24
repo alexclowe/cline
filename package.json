@@ -207,6 +207,18 @@
 				"command": "cline.openWalkthrough",
 				"title": "Open Walkthrough",
 				"category": "Cline"
+			},
+			{
+				"command": "cline.enhancedTask",
+				"title": "Enhanced Task (Claude-Flow)",
+				"category": "Cline",
+				"icon": "$(zap)"
+			},
+			{
+				"command": "cline.orchestrationControl",
+				"title": "Orchestration Control",
+				"category": "Cline",
+				"icon": "$(organization)"
 			}
 		],
 		"keybindings": [
@@ -334,7 +346,58 @@
 		},
 		"configuration": {
 			"title": "Cline",
-			"properties": {}
+			"properties": {
+				"cline.orchestration.enabled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable Cline-Flow orchestration for complex tasks"
+				},
+				"cline.orchestration.mode": {
+					"type": "string",
+					"enum": [
+						"DISABLED",
+						"ANALYSIS_ONLY",
+						"SINGLE_AGENT_FALLBACK",
+						"FULL_ORCHESTRATION",
+						"ADAPTIVE"
+					],
+					"default": "ADAPTIVE",
+					"description": "Orchestration mode for task execution",
+					"enumDescriptions": [
+						"Orchestration completely disabled",
+						"Only analyze tasks but don't orchestrate",
+						"Use single agent with fallback",
+						"Full multi-agent orchestration",
+						"Adaptive mode based on task complexity"
+					]
+				},
+				"cline.orchestration.complexityThreshold": {
+					"type": "number",
+					"default": 0.4,
+					"minimum": 0,
+					"maximum": 1,
+					"description": "Complexity threshold for triggering orchestration (0.0-1.0)"
+				},
+				"cline.orchestration.maxAgents": {
+					"type": "integer",
+					"default": 3,
+					"minimum": 1,
+					"maximum": 10,
+					"description": "Maximum number of agents to use in orchestration"
+				},
+				"cline.orchestration.timeoutMs": {
+					"type": "integer",
+					"default": 300000,
+					"minimum": 30000,
+					"maximum": 1800000,
+					"description": "Timeout for orchestration tasks in milliseconds"
+				},
+				"cline.orchestration.fallbackToSingleAgent": {
+					"type": "boolean",
+					"default": true,
+					"description": "Fallback to single agent if orchestration fails"
+				}
+			}
 		}
 	},
 	"scripts": {
@@ -390,10 +453,13 @@
 		"@biomejs/biome": "^2.1.4",
 		"@bufbuild/buf": "^1.54.0",
 		"@changesets/cli": "^2.27.12",
+		"@types/better-sqlite3": "^7.6.13",
 		"@types/chai": "^5.0.1",
 		"@types/clone-deep": "^4.0.4",
 		"@types/diff": "^5.2.1",
+		"@types/figlet": "^1.7.0",
 		"@types/get-folder-size": "^3.0.4",
+		"@types/gradient-string": "^1.1.6",
 		"@types/mocha": "^10.0.7",
 		"@types/node": "20.x",
 		"@types/pdf-parse": "^1.1.4",
@@ -406,9 +472,9 @@
 		"@vscode/test-electron": "^2.5.2",
 		"@vscode/vsce": "^3.6.0",
 		"chai": "^4.3.10",
-		"chalk": "^5.3.0",
+		"chalk": "^5.6.0",
 		"esbuild": "^0.25.0",
-		"grpc-tools": "^1.13.0",
+		"grpc-tools": "^1.12.3",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.1.0",
 		"minimatch": "^3.0.3",
@@ -419,7 +485,8 @@
 		"should": "^13.2.3",
 		"sinon": "^19.0.2",
 		"ts-node": "^10.9.2",
-		"ts-proto": "^2.6.1",
+		"ts-proto": "^1.168.0",
+		"ts-protoc-gen": "^0.15.0",
 		"tsconfig-paths": "^4.2.0",
 		"typescript": "^5.4.5"
 	},
@@ -430,6 +497,7 @@
 		"@aws-sdk/credential-providers": "^3.840.0",
 		"@bufbuild/protobuf": "^2.2.5",
 		"@cerebras/cerebras_cloud_sdk": "^1.35.0",
+		"@google-ai/generativelanguage": "^2.5.0",
 		"@google-cloud/vertexai": "^1.9.3",
 		"@google/genai": "1.0.0",
 		"@grpc/grpc-js": "^1.9.15",
@@ -449,10 +517,12 @@
 		"@vscode/codicons": "^0.0.36",
 		"archiver": "^7.0.1",
 		"axios": "^1.8.2",
+		"better-sqlite3": "^9.4.0",
 		"cheerio": "^1.0.0",
 		"chokidar": "^4.0.1",
 		"chrome-launcher": "^1.1.2",
 		"clone-deep": "^4.0.1",
+		"cohere-ai": "^7.7.0",
 		"default-shell": "^2.2.0",
 		"diff": "^5.2.0",
 		"exceljs": "^4.4.0",
@@ -472,15 +542,18 @@
 		"mammoth": "^1.8.0",
 		"monaco-vscode-textmate-theme-converter": "^0.1.7",
 		"nice-grpc": "^2.1.12",
+		"node-cache": "^5.1.2",
 		"ollama": "^0.5.13",
 		"open": "^10.1.2",
 		"open-graph-scraper": "^6.9.0",
 		"openai": "^4.83.0",
 		"os-name": "^6.0.0",
+		"p-queue": "^8.0.1",
 		"p-timeout": "^6.1.4",
 		"p-wait-for": "^5.0.2",
 		"pdf-parse": "^1.1.1",
 		"posthog-node": "^4.8.1",
+		"puppeteer": "^22.0.0",
 		"puppeteer-chromium-resolver": "^23.0.0",
 		"puppeteer-core": "^23.4.0",
 		"reconnecting-eventsource": "^1.6.4",
@@ -494,6 +567,7 @@
 		"uuid": "^11.1.0",
 		"vscode-uri": "^3.1.0",
 		"web-tree-sitter": "^0.22.6",
+		"winston": "^3.11.0",
 		"zod": "^3.24.2"
 	}
 }

@@ -25,6 +25,12 @@ import { PostHogClientProvider, telemetryService } from "@/services/posthog/Post
 import { ShowMessageType } from "@/shared/proto/host/window"
 import { getLatestAnnouncementId } from "@/utils/announcements"
 import { getCwd, getDesktopDir } from "@/utils/path"
+import { EventBus } from "../../core/event-bus"
+import { ConsoleLogger } from "../../core/logger"
+import { MemoryManager } from "../../memory/manager"
+import { ClaudeFlowOrchestrator, OrchestrationConfig, OrchestrationMode } from "../../orchestration/ClaudeFlowOrchestrator"
+import { SwarmCoordinator } from "../../swarm/coordinator"
+import type { MemoryConfig } from "../../utils/types"
 import { CacheService, PersistenceErrorEvent } from "../storage/CacheService"
 import { ensureMcpServersDirectoryExists, ensureSettingsDirectoryExists, GlobalFileNames } from "../storage/disk"
 import { Task } from "../task"
@@ -46,6 +52,21 @@ export class Controller {
 	accountService: ClineAccountService
 	authService: AuthService
 	readonly cacheService: CacheService
+
+	// Claude-Flow Orchestration components (optional)
+	private claudeFlowOrchestrator?: ClaudeFlowOrchestrator
+	private swarmCoordinator?: SwarmCoordinator
+	private memoryManager?: MemoryManager
+	private orchestrationEnabled: boolean = false
+
+	// Public getters for orchestration components (required for RPC handlers)
+	get claudeFlowOrchestratorInstance(): ClaudeFlowOrchestrator | undefined {
+		return this.claudeFlowOrchestrator
+	}
+
+	get isOrchestrationEnabled(): boolean {
+		return this.orchestrationEnabled
+	}
 
 	constructor(
 		readonly context: vscode.ExtensionContext,
@@ -157,6 +178,26 @@ export class Controller {
 
 	async initTask(task?: string, images?: string[], files?: string[], historyItem?: HistoryItem) {
 		await this.clearTask() // ensures that an existing task doesn't exist before starting a new one, although this shouldn't be possible since user must clear task before starting a new one
+
+		// Initialize orchestration system if not already done
+		if (!this.orchestrationEnabled) {
+			await this.initializeOrchestration()
+		}
+
+		// Check if this task should use orchestration
+		if (task && this.shouldUseOrchestration(task)) {
+			try {
+				console.log("Task complexity assessment suggests orchestration - attempting orchestrated execution")
+				const result = await this.attemptOrchestration(task, images, files, historyItem)
+				if (result.success) {
+					console.log("Orchestrated execution completed successfully")
+					return
+				}
+				console.log("Orchestrated execution failed, falling back to standard execution:", result.error)
+			} catch (error) {
+				console.error("Orchestration failed, falling back to standard execution:", error)
+			}
+		}
 
 		const apiConfiguration = this.cacheService.getApiConfiguration()
 		const autoApprovalSettings = this.cacheService.getGlobalStateKey("autoApprovalSettings")
@@ -719,5 +760,438 @@ export class Controller {
 		}
 		this.cacheService.setGlobalState("taskHistory", history)
 		return history
+	}
+
+	// ===== CLAUDE-FLOW ORCHESTRATION METHODS =====
+
+	/**
+	 * Get orchestration configuration from VSCode settings
+	 */
+	private getOrchestrationConfigFromSettings(): Partial<OrchestrationConfig> {
+		const config = vscode.workspace.getConfiguration("cline.orchestration")
+
+		const enabled = config.get<boolean>("enabled", false)
+		const maxAgents = config.get<number>("maxAgents", 3)
+		const timeoutMs = config.get<number>("timeoutMs", 300000)
+		const fallbackToSingleAgent = config.get<boolean>("fallbackToSingleAgent", true)
+
+		return {
+			enabled,
+			maxConcurrentAgents: maxAgents,
+			maxMemoryUsage: 512 * 1024 * 1024, // 512MB
+			timeoutMinutes: Math.ceil(timeoutMs / 60000), // Convert ms to minutes
+			fallbackToSingleAgent,
+			debugMode: false,
+			autoOptimization: true,
+			resourceMonitoring: true,
+			vsCodeLmModelSelector: {}, // Use default VS Code LM models
+		}
+	}
+
+	/**
+	 * Get complexity threshold from VSCode settings
+	 */
+	private getComplexityThreshold(): number {
+		const config = vscode.workspace.getConfiguration("cline.orchestration")
+		return config.get<number>("complexityThreshold", 0.4)
+	}
+
+	/**
+	 * Initialize Claude-Flow orchestration system (optional enhancement)
+	 */
+	async initializeOrchestration(): Promise<void> {
+		try {
+			console.log("Initializing Claude-Flow orchestration system...")
+
+			// Get orchestration configuration from VSCode settings
+			const orchestrationConfig = this.getOrchestrationConfigFromSettings()
+
+			// Skip initialization if orchestration is disabled in settings
+			if (!orchestrationConfig.enabled) {
+				console.log("Orchestration disabled in settings, skipping initialization")
+				this.orchestrationEnabled = false
+				return
+			}
+
+			// Initialize memory manager
+			const memoryConfig: MemoryConfig = {
+				backend: "sqlite",
+				sqlitePath: path.join(this.context.globalStorageUri.fsPath, "cline-memory.db"),
+				cacheSizeMB: 64,
+				retentionDays: 30,
+				syncInterval: 60000, // 60 seconds
+				conflictResolution: "last-write",
+			}
+
+			const eventBus = new EventBus()
+			const logger = new ConsoleLogger()
+
+			this.memoryManager = new MemoryManager(memoryConfig, eventBus, logger)
+			await this.memoryManager.initialize()
+
+			// Initialize swarm coordinator with simple config
+			this.swarmCoordinator = new SwarmCoordinator({
+				name: "Cline Orchestration Swarm",
+				description: "Claude-Flow orchestration for Cline tasks",
+				mode: "centralized",
+				strategy: "auto",
+				maxAgents: 3,
+			})
+
+			await this.swarmCoordinator.initialize()
+
+			// Initialize Claude-Flow orchestrator
+			this.claudeFlowOrchestrator = new ClaudeFlowOrchestrator(
+				this.swarmCoordinator,
+				this.memoryManager,
+				orchestrationConfig,
+			)
+
+			this.orchestrationEnabled = true
+
+			console.log("Claude-Flow orchestration system initialized successfully")
+		} catch (error) {
+			console.error("Failed to initialize Claude-Flow orchestration:", error)
+			console.log("Falling back to standard Cline operation")
+			this.orchestrationEnabled = false
+
+			// Clean up any partially initialized components
+			await this.shutdownOrchestration()
+		}
+	}
+
+	/**
+	 * Shutdown orchestration system
+	 */
+	async shutdownOrchestration(): Promise<void> {
+		try {
+			if (this.claudeFlowOrchestrator) {
+				await this.claudeFlowOrchestrator.cleanup()
+				this.claudeFlowOrchestrator = undefined
+			}
+
+			if (this.swarmCoordinator) {
+				await this.swarmCoordinator.shutdown()
+				this.swarmCoordinator = undefined
+			}
+
+			if (this.memoryManager) {
+				await this.memoryManager.shutdown()
+				this.memoryManager = undefined
+			}
+
+			this.orchestrationEnabled = false
+			console.log("Claude-Flow orchestration system shut down")
+		} catch (error) {
+			console.error("Error shutting down orchestration:", error)
+		}
+	}
+
+	/**
+	 * Check if a task should use orchestration based on complexity analysis
+	 */
+	shouldUseOrchestration(taskDescription: string): boolean {
+		// Check if orchestration is globally enabled
+		if (!this.orchestrationEnabled || !this.claudeFlowOrchestrator) {
+			return false
+		}
+
+		// Get orchestration configuration
+		const config = this.claudeFlowOrchestrator.getConfig()
+		if (!config.enabled) {
+			return false
+		}
+
+		try {
+			// Quick complexity assessment without full context
+			const quickComplexity = this.assessTaskComplexity(taskDescription)
+
+			// Get complexity threshold from settings
+			const complexityThreshold = this.getComplexityThreshold()
+
+			// Use orchestration for tasks that exceed the complexity threshold
+			return quickComplexity > complexityThreshold
+		} catch (error) {
+			console.error("Error assessing task complexity:", error)
+			return false // Fallback to standard execution
+		}
+	}
+
+	/**
+	 * Quick task complexity assessment for orchestration routing
+	 */
+	private assessTaskComplexity(taskDescription: string): number {
+		const text = taskDescription.toLowerCase()
+		let complexity = 0.1 // Base complexity
+
+		// High complexity indicators
+		const highComplexityKeywords = [
+			"architecture",
+			"design pattern",
+			"microservices",
+			"distributed",
+			"algorithm",
+			"optimization",
+			"performance",
+			"security",
+			"database",
+			"machine learning",
+			"ai",
+			"refactor",
+			"multiple files",
+			"system",
+		]
+
+		// Medium complexity indicators
+		const mediumComplexityKeywords = [
+			"test",
+			"integration",
+			"api",
+			"interface",
+			"framework",
+			"library",
+			"configuration",
+			"deployment",
+			"component",
+		]
+
+		// Check for high complexity keywords
+		const highMatches = highComplexityKeywords.filter((keyword) => text.includes(keyword)).length
+		complexity += highMatches * 0.2
+
+		// Check for medium complexity keywords
+		const mediumMatches = mediumComplexityKeywords.filter((keyword) => text.includes(keyword)).length
+		complexity += mediumMatches * 0.15
+
+		// Length-based complexity
+		if (taskDescription.length > 500) {
+			complexity += 0.2
+		}
+		if (taskDescription.length > 1000) {
+			complexity += 0.2
+		}
+
+		// Multiple requirements indicator
+		if (text.includes(" and ") || text.includes(" also ") || text.includes(" then ")) {
+			complexity += 0.2
+		}
+
+		// File operation indicators
+		if (text.includes("multiple") || text.includes("several") || text.includes("many")) {
+			complexity += 0.15
+		}
+
+		return Math.min(complexity, 1.0)
+	}
+
+	/**
+	 * Attempt orchestrated execution of a task
+	 */
+	private async attemptOrchestration(
+		task: string,
+		_images?: string[],
+		_files?: string[],
+		_historyItem?: HistoryItem,
+	): Promise<{ success: boolean; error?: string }> {
+		if (!this.claudeFlowOrchestrator) {
+			return { success: false, error: "Orchestrator not initialized" }
+		}
+
+		try {
+			// Use adaptive mode for orchestration - let the system decide
+			const result = await this.claudeFlowOrchestrator.orchestrateTask(
+				task,
+				undefined, // context
+				OrchestrationMode.ADAPTIVE,
+			)
+
+			// Check if orchestration was successful
+			if (result.success) {
+				console.log(
+					`Orchestration completed successfully with ${result.agents.length} agents in ${result.executionTime}ms`,
+				)
+				return { success: true }
+			} else {
+				return { success: false, error: result.error || "Orchestration failed" }
+			}
+		} catch (error) {
+			return {
+				success: false,
+				error: error instanceof Error ? error.message : String(error),
+			}
+		}
+	}
+
+	/**
+	 * Orchestrate a task using Claude-Flow system (public API)
+	 */
+	async orchestrateTask(taskDescription: string, mode?: OrchestrationMode): Promise<any> {
+		if (!this.claudeFlowOrchestrator) {
+			throw new Error("Orchestration system is not initialized")
+		}
+
+		return await this.claudeFlowOrchestrator.orchestrateTask(taskDescription, undefined, mode)
+	}
+
+	/**
+	 * Get orchestration status and metrics
+	 */
+	getOrchestrationStatus(): {
+		enabled: boolean
+		metrics?: any
+		health?: any
+		activeTasks?: any[]
+	} {
+		if (!this.orchestrationEnabled || !this.claudeFlowOrchestrator) {
+			return {
+				enabled: false,
+				metrics: null,
+				health: null,
+				activeTasks: [],
+			}
+		}
+
+		try {
+			const metrics = this.claudeFlowOrchestrator.getMetrics()
+			const health = this.claudeFlowOrchestrator.getHealthStatus()
+			const activeTasks = this.claudeFlowOrchestrator.getActiveTasks()
+
+			return {
+				enabled: true,
+				metrics: {
+					totalTasks: metrics.totalTasks,
+					successfulTasks: metrics.successfulTasks,
+					failedTasks: metrics.failedTasks,
+					efficiency: metrics.efficiency,
+					averageExecutionTime: metrics.averageExecutionTime,
+					averageAgentsUsed: metrics.averageAgentsUsed,
+				},
+				health: {
+					isHealthy: health.isHealthy,
+					activeTasks: health.activeTasks,
+					memoryUsage: health.memoryUsage,
+					maxMemoryUsage: health.maxMemoryUsage,
+					uptime: health.uptime,
+				},
+				activeTasks: activeTasks.map((task) => ({
+					id: task.id,
+					description: task.description.substring(0, 100) + "...",
+					status: task.status,
+					agentCount: task.agents.length,
+					startTime: task.startTime,
+				})),
+			}
+		} catch (error) {
+			console.error("Error getting orchestration status:", error)
+			return {
+				enabled: true,
+				metrics: null,
+				health: null,
+				activeTasks: [],
+			}
+		}
+	}
+
+	/**
+	 * Update orchestration configuration (public API for RPC handlers)
+	 */
+	async updateOrchestrationConfigRPC(config: Partial<OrchestrationConfig>): Promise<void> {
+		// Update orchestration configuration if orchestrator exists
+		if (this.claudeFlowOrchestrator) {
+			this.claudeFlowOrchestrator.updateConfig(config)
+			console.log("Orchestration configuration updated:", config)
+		} else {
+			console.log("Orchestration not initialized, configuration not applied")
+		}
+
+		// If orchestration is being enabled, initialize it
+		if (config.enabled && !this.orchestrationEnabled) {
+			await this.initializeOrchestration()
+		}
+
+		// If orchestration is being disabled, shut it down
+		if (config.enabled === false && this.orchestrationEnabled) {
+			await this.shutdownOrchestration()
+		}
+	}
+
+	/**
+	 * Cancel an orchestration task (public API for RPC handlers)
+	 */
+	async cancelOrchestrationTask(taskId: string): Promise<boolean> {
+		if (!this.claudeFlowOrchestrator) {
+			return false
+		}
+
+		try {
+			await this.claudeFlowOrchestrator.cancelTask(taskId)
+			return true
+		} catch (error) {
+			console.error("Error canceling orchestration task:", error)
+			return false
+		}
+	}
+
+	/**
+	 * Get orchestration metrics (public API for RPC handlers)
+	 */
+	getOrchestrationMetrics(): any {
+		if (!this.claudeFlowOrchestrator) {
+			return null
+		}
+
+		try {
+			return this.claudeFlowOrchestrator.getMetrics()
+		} catch (error) {
+			console.error("Error getting orchestration metrics:", error)
+			return null
+		}
+	}
+
+	/**
+	 * Reset orchestration metrics (public API for RPC handlers)
+	 */
+	async resetOrchestrationMetrics(): Promise<void> {
+		if (!this.claudeFlowOrchestrator) {
+			return
+		}
+
+		try {
+			this.claudeFlowOrchestrator.resetMetrics()
+		} catch (error) {
+			console.error("Error resetting orchestration metrics:", error)
+		}
+	}
+
+	/**
+	 * Get orchestration health status (public API for RPC handlers)
+	 */
+	getOrchestrationHealth(): any {
+		if (!this.claudeFlowOrchestrator) {
+			return null
+		}
+
+		try {
+			return this.claudeFlowOrchestrator.getHealthStatus()
+		} catch (error) {
+			console.error("Error getting orchestration health:", error)
+			return null
+		}
+	}
+
+	/**
+	 * Get active orchestration tasks (public API for RPC handlers)
+	 */
+	getActiveOrchestrationTasks(): any[] {
+		if (!this.claudeFlowOrchestrator) {
+			return []
+		}
+
+		try {
+			return this.claudeFlowOrchestrator.getActiveTasks()
+		} catch (error) {
+			console.error("Error getting active orchestration tasks:", error)
+			return []
+		}
 	}
 }

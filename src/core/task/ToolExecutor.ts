@@ -291,7 +291,7 @@ export class ToolExecutor {
 		// - Optionally matches whitespace before the tag
 		// - Matches '<' or '</' optionally followed by any subset of characters from the tag name
 		const tagRegex = new RegExp(
-			`\\s?<\/?${tag
+			`\\s?</?${tag
 				.split("")
 				.map((char) => `(?:${char})?`)
 				.join("")}$`,
@@ -1423,7 +1423,7 @@ export class ToolExecutor {
 											return item.text
 										}
 										if (item.type === "resource") {
-											const { blob, ...rest } = item.resource
+											const { blob: _blob, ...rest } = item.resource
 											return JSON.stringify(rest, null, 2)
 										}
 										return ""

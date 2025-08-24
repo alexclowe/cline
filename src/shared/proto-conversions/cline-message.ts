@@ -169,7 +169,7 @@ export function convertClineMessageToProto(message: AppClineMessage): ProtoCline
 	}
 
 	const protoMessage: ProtoClineMessage = {
-		ts: message.ts,
+		ts: message.ts.toString(),
 		type: message.type === "ask" ? ClineMessageType.ASK : ClineMessageType.SAY,
 		ask: finalAskEnum,
 		say: finalSayEnum,
@@ -198,7 +198,7 @@ export function convertClineMessageToProto(message: AppClineMessage): ProtoCline
  */
 export function convertProtoToClineMessage(protoMessage: ProtoClineMessage): AppClineMessage {
 	const message: AppClineMessage = {
-		ts: protoMessage.ts,
+		ts: parseInt(protoMessage.ts, 10),
 		type: protoMessage.type === ClineMessageType.ASK ? "ask" : "say",
 	}
 

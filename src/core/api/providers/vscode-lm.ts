@@ -13,90 +13,43 @@ interface VsCodeLmHandlerOptions {
 	vsCodeLmModelSelector?: any
 }
 
-// Cline does not update VSCode type definitions or engine requirements to maintain compatibility.
-// This declaration (as seen in src/integrations/TerminalManager.ts) provides types for the Language Model API in newer versions of VSCode.
-// Extracted from https://github.com/microsoft/vscode/blob/131ee0ef660d600cd0a7e6058375b281553abe20/src/vscode-dts/vscode.d.ts
-declare module "vscode" {
-	enum LanguageModelChatMessageRole {
-		User = 1,
-		Assistant = 2,
+// Type compatibility layer for VSCode Language Model API
+// This avoids conflicts with built-in VSCode types while providing needed functionality
+type VSCodeLMSelector = LanguageModelChatSelectorFromTypes
+
+// Simple interfaces for the API without conflicting with VSCode types
+interface VSCodeLMAPI {
+	lm?: {
+		selectChatModels?: (selector?: VSCodeLMSelector) => Promise<any[]>
 	}
-	enum LanguageModelChatToolMode {
-		Auto = 1,
-		Required = 2,
-	}
-	interface LanguageModelChatSelector extends LanguageModelChatSelectorFromTypes {}
-	interface LanguageModelChatTool {
-		name: string
-		description: string
-		inputSchema?: object
-	}
-	interface LanguageModelChatRequestOptions {
-		justification?: string
-		modelOptions?: { [name: string]: any }
-		tools?: LanguageModelChatTool[]
-		toolMode?: LanguageModelChatToolMode
-	}
-	class LanguageModelTextPart {
-		value: string
-		constructor(value: string)
-	}
-	class LanguageModelToolCallPart {
+	LanguageModelTextPart?: new (value: string) => { value: string }
+	LanguageModelToolCallPart?: new (
+		callId: string,
+		name: string,
+		input: object,
+	) => {
 		callId: string
 		name: string
 		input: object
-		constructor(callId: string, name: string, input: object)
 	}
-	interface LanguageModelChatResponse {
-		stream: AsyncIterable<LanguageModelTextPart | LanguageModelToolCallPart | unknown>
-		text: AsyncIterable<string>
+	LanguageModelChatMessage?: {
+		User: (content: string | any[], name?: string) => any
+		Assistant: (content: string | any[], name?: string) => any
 	}
-	interface LanguageModelChat {
-		readonly name: string
-		readonly id: string
-		readonly vendor: string
-		readonly family: string
-		readonly version: string
-		readonly maxInputTokens: number
+	CancellationTokenSource?: new () => {
+		token: any
+		cancel: () => void
+		dispose: () => void
+	}
+	CancellationError?: new () => Error
+}
 
-		sendRequest(
-			messages: LanguageModelChatMessage[],
-			options?: LanguageModelChatRequestOptions,
-			token?: CancellationToken,
-		): Thenable<LanguageModelChatResponse>
-		countTokens(text: string | LanguageModelChatMessage, token?: CancellationToken): Thenable<number>
-	}
-	class LanguageModelPromptTsxPart {
-		value: unknown
-		constructor(value: unknown)
-	}
-	class LanguageModelToolResultPart {
-		callId: string
-		content: Array<LanguageModelTextPart | LanguageModelPromptTsxPart | unknown>
-		constructor(callId: string, content: Array<LanguageModelTextPart | LanguageModelPromptTsxPart | unknown>)
-	}
-	class LanguageModelChatMessage {
-		static User(
-			content: string | Array<LanguageModelTextPart | LanguageModelToolResultPart>,
-			name?: string,
-		): LanguageModelChatMessage
-		static Assistant(
-			content: string | Array<LanguageModelTextPart | LanguageModelToolCallPart>,
-			name?: string,
-		): LanguageModelChatMessage
-
-		role: LanguageModelChatMessageRole
-		content: Array<LanguageModelTextPart | LanguageModelToolResultPart | LanguageModelToolCallPart>
-		name: string | undefined
-
-		constructor(
-			role: LanguageModelChatMessageRole,
-			content: string | Array<LanguageModelTextPart | LanguageModelToolResultPart | LanguageModelToolCallPart>,
-			name?: string,
-		)
-	}
-	namespace lm {
-		function selectChatModels(selector?: LanguageModelChatSelector): Thenable<LanguageModelChat[]>
+// Safe access to VSCode API with fallbacks
+function getVSCodeLMAPI(): VSCodeLMAPI {
+	try {
+		return vscode as any
+	} catch {
+		return {}
 	}
 }
 
@@ -129,9 +82,9 @@ declare module "vscode" {
  */
 export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 	private options: VsCodeLmHandlerOptions
-	private client: vscode.LanguageModelChat | null
+	private client: any | null
 	private disposable: vscode.Disposable | null
-	private currentRequestCancellation: vscode.CancellationTokenSource | null
+	private currentRequestCancellation: any | null
 
 	constructor(options: VsCodeLmHandlerOptions) {
 		this.options = options
@@ -172,13 +125,15 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 	 * const selector = { vendor: "copilot", family: "gpt-4o" };
 	 * const chatClient = await createClient(selector);
 	 */
-	async createClient(selector: vscode.LanguageModelChatSelector): Promise<vscode.LanguageModelChat> {
+	async createClient(selector: VSCodeLMSelector): Promise<any> {
 		try {
-			const models = await vscode.lm.selectChatModels(selector)
-
-			// Use first available model or create a minimal model object
-			if (models && Array.isArray(models) && models.length > 0) {
-				return models[0]
+			const api = getVSCodeLMAPI()
+			if (api.lm?.selectChatModels) {
+				const models = await api.lm.selectChatModels(selector)
+				// Use first available model or create a minimal model object
+				if (models && Array.isArray(models) && models.length > 0) {
+					return models[0]
+				}
 			}
 
 			// Create a minimal model if no models are available
@@ -189,13 +144,17 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 				family: "lm",
 				version: "1.0",
 				maxInputTokens: 8192,
-				sendRequest: async (_messages, _options, _token) => {
+				sendRequest: async (_messages: any[], _options?: any, _token?: any) => {
 					// Provide a minimal implementation
 					return {
 						stream: (async function* () {
-							yield new vscode.LanguageModelTextPart(
-								"Language model functionality is limited. Please check VS Code configuration.",
-							)
+							if (api.LanguageModelTextPart) {
+								yield new api.LanguageModelTextPart(
+									"Language model functionality is limited. Please check VS Code configuration.",
+								)
+							} else {
+								yield { value: "Language model functionality is limited. Please check VS Code configuration." }
+							}
 						})(),
 						text: (async function* () {
 							yield "Language model functionality is limited. Please check VS Code configuration."
@@ -237,17 +196,18 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		}
 	}
 
-	private extractTextFromMessage(message: vscode.LanguageModelChatMessage): string {
+	private extractTextFromMessage(message: any): string {
 		if (Array.isArray(message.content)) {
+			const api = getVSCodeLMAPI()
 			return message.content
-				.filter((part) => part instanceof vscode.LanguageModelTextPart)
-				.map((part) => (part as vscode.LanguageModelTextPart).value)
+				.filter((part: any) => (api.LanguageModelTextPart ? part instanceof api.LanguageModelTextPart : part.value))
+				.map((part: any) => part.value || "")
 				.join("")
 		}
 		return ""
 	}
 
-	private async countTokens(text: string | vscode.LanguageModelChatMessage): Promise<number> {
+	private async countTokens(text: string | any): Promise<number> {
 		/**
 		 * NOTE (intentional trade-off):
 		 * We use a coarse chars/4 heuristic here instead of a real tokenizer (e.g., js-tiktoken with o200k_base).
@@ -256,14 +216,14 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		 *  - Eliminate encoder lifecycle/memory concerns in long-running sessions.
 		 * Consequences:
 		 *  - This is not model-accurate and can under/over-estimate tokens, especially with tool/function calls.
-		 *  - It is “good enough” for budgeting/context checks, and we accept the inaccuracy by design.
+		 *  - It is "good enough" for budgeting/context checks, and we accept the inaccuracy by design.
 		 * If precise accounting becomes a requirement, reintroduce a tokenizer behind a feature flag or backend-only path.
 		 */
 		const textContent = typeof text === "string" ? text : this.extractTextFromMessage(text)
 		return Math.ceil((textContent || "").length / 4)
 	}
 
-	private async calculateTotalInputTokens(vsCodeLmMessages: vscode.LanguageModelChatMessage[]): Promise<number> {
+	private async calculateTotalInputTokens(vsCodeLmMessages: any[]): Promise<number> {
 		const messageTokens: number[] = await Promise.all(vsCodeLmMessages.map((msg) => this.countTokens(msg)))
 
 		return messageTokens.reduce((sum: number, tokens: number): number => sum + tokens, 0)
@@ -277,7 +237,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		}
 	}
 
-	private async getClient(): Promise<vscode.LanguageModelChat> {
+	private async getClient(): Promise<any> {
 		if (!this.client) {
 			console.debug("Cline <Language Model API>: Getting client with options:", {
 				vsCodeLmModelSelector: this.options.vsCodeLmModelSelector,
@@ -369,7 +329,8 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 	async *createMessage(systemPrompt: string, messages: Anthropic.Messages.MessageParam[]): ApiStream {
 		// Ensure clean state before starting a new request
 		this.ensureCleanState()
-		const client: vscode.LanguageModelChat = await this.getClient()
+		const client: any = await this.getClient()
+		const api = getVSCodeLMAPI()
 
 		// Clean system prompt and messages
 		const cleanedSystemPrompt = this.cleanTerminalOutput(systemPrompt)
@@ -379,13 +340,16 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		}))
 
 		// Convert Anthropic messages to VS Code LM messages
-		const vsCodeLmMessages: vscode.LanguageModelChatMessage[] = [
-			vscode.LanguageModelChatMessage.Assistant(cleanedSystemPrompt),
-			...convertToVsCodeLmMessages(cleanedMessages),
-		]
+		const vsCodeLmMessages: any[] = []
+		if (api.LanguageModelChatMessage?.Assistant) {
+			vsCodeLmMessages.push(api.LanguageModelChatMessage.Assistant(cleanedSystemPrompt))
+		}
+		vsCodeLmMessages.push(...convertToVsCodeLmMessages(cleanedMessages))
 
 		// Initialize cancellation token for the request
-		this.currentRequestCancellation = new vscode.CancellationTokenSource()
+		if (api.CancellationTokenSource) {
+			this.currentRequestCancellation = new api.CancellationTokenSource()
+		}
 
 		// Calculate input tokens before starting the stream
 		const totalInputTokens: number = await this.calculateTotalInputTokens(vsCodeLmMessages)
@@ -395,22 +359,23 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 
 		try {
 			// Create the response stream with minimal required options
-			const requestOptions: vscode.LanguageModelChatRequestOptions = {
+			const requestOptions: any = {
 				justification: `Cline would like to use '${client.name}' from '${client.vendor}', Click 'Allow' to proceed.`,
 			}
 
 			// Note: Tool support is currently provided by the VSCode Language Model API directly
 			// Extensions can register tools using vscode.lm.registerTool()
 
-			const response: vscode.LanguageModelChatResponse = await client.sendRequest(
+			const response: any = await client.sendRequest(
 				vsCodeLmMessages,
 				requestOptions,
-				this.currentRequestCancellation.token,
+				this.currentRequestCancellation?.token,
 			)
 
 			// Consume the stream and handle both text and tool call chunks
 			for await (const chunk of response.stream) {
-				if (chunk instanceof vscode.LanguageModelTextPart) {
+				// Check if it's a text part
+				if (api.LanguageModelTextPart && chunk instanceof api.LanguageModelTextPart) {
 					// Validate text part value
 					if (typeof chunk.value !== "string") {
 						console.warn("Cline <Language Model API>: Invalid text part value received:", chunk.value)
@@ -422,7 +387,14 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 						type: "text",
 						text: chunk.value,
 					}
-				} else if (chunk instanceof vscode.LanguageModelToolCallPart) {
+				} else if (chunk.value && typeof chunk.value === "string") {
+					// Fallback for simple text chunks
+					accumulatedText += chunk.value
+					yield {
+						type: "text",
+						text: chunk.value,
+					}
+				} else if (api.LanguageModelToolCallPart && chunk instanceof api.LanguageModelToolCallPart) {
 					try {
 						// Validate tool call parameters
 						if (!chunk.name || typeof chunk.name !== "string") {
@@ -484,7 +456,9 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		} catch (error: unknown) {
 			this.ensureCleanState()
 
-			if (error instanceof vscode.CancellationError) {
+			// Check for cancellation error safely
+			const isCancellationError = api.CancellationError && error instanceof api.CancellationError
+			if (isCancellationError) {
 				throw new Error("Cline <Language Model API>: Request cancelled by user")
 			}
 
@@ -571,14 +545,24 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 	async completePrompt(prompt: string): Promise<string> {
 		try {
 			const client = await this.getClient()
+			const api = getVSCodeLMAPI()
+
+			// Create simple user message
+			const userMessage = api.LanguageModelChatMessage?.User
+				? api.LanguageModelChatMessage.User(prompt)
+				: { role: "user", content: prompt }
+
 			const response = await client.sendRequest(
-				[vscode.LanguageModelChatMessage.User(prompt)],
+				[userMessage],
 				{},
-				new vscode.CancellationTokenSource().token,
+				api.CancellationTokenSource ? new api.CancellationTokenSource().token : undefined,
 			)
+
 			let result = ""
 			for await (const chunk of response.stream) {
-				if (chunk instanceof vscode.LanguageModelTextPart) {
+				if (api.LanguageModelTextPart && chunk instanceof api.LanguageModelTextPart) {
+					result += chunk.value
+				} else if (chunk.value && typeof chunk.value === "string") {
 					result += chunk.value
 				}
 			}

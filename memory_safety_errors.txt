@@ -1,0 +1,105 @@
+src/core/controller/ui/initializeWebview.ts(36,70): error TS2322: Type 'Record<string, ModelInfo>' is not assignable to type '{ [x: string]: { maxTokens?: string | undefined; contextWindow?: string | undefined; supportsImages?: boolean | undefined; supportsPromptCache?: boolean | undefined; inputPrice?: number | undefined; ... 6 more ...; tiers?: { ...; }[] | undefined; } | undefined; } & { ...; } & {}'.
+  Type 'Record<string, ModelInfo>' is not assignable to type '{ [x: string]: { maxTokens?: string | undefined; contextWindow?: string | undefined; supportsImages?: boolean | undefined; supportsPromptCache?: boolean | undefined; inputPrice?: number | undefined; ... 6 more ...; tiers?: { ...; }[] | undefined; } | undefined; }'.
+      Type 'ModelInfo' is not assignable to type '{ maxTokens?: string | undefined; contextWindow?: string | undefined; supportsImages?: boolean | undefined; supportsPromptCache?: boolean | undefined; inputPrice?: number | undefined; ... 6 more ...; tiers?: { ...; }[] | undefined; }'.
+        Types of property 'maxTokens' are incompatible.
+          Type 'number | undefined' is not assignable to type 'string | undefined'.
+            Type 'number' is not assignable to type 'string'.
+src/core/controller/ui/initializeWebview.ts(70,7): error TS2322: Type 'OpenRouterModelInfo' is not assignable to type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(75,7): error TS2322: Type 'OpenRouterModelInfo' is not assignable to type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(116,7): error TS2322: Type 'OpenRouterModelInfo' is not assignable to type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(121,7): error TS2322: Type 'OpenRouterModelInfo' is not assignable to type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(148,62): error TS2345: Argument of type 'OpenRouterModelInfo' is not assignable to parameter of type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(158,74): error TS2345: Argument of type 'OpenRouterModelInfo' is not assignable to parameter of type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(163,73): error TS2345: Argument of type 'OpenRouterModelInfo' is not assignable to parameter of type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(206,7): error TS2322: Type 'OpenRouterModelInfo' is not assignable to type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/core/controller/ui/initializeWebview.ts(211,7): error TS2322: Type 'OpenRouterModelInfo' is not assignable to type 'ModelInfo'.
+  Types of property 'maxTokens' are incompatible.
+    Type 'string | undefined' is not assignable to type 'number | undefined'.
+      Type 'string' is not assignable to type 'number'.
+src/memory/distributed-memory.ts(625,7): error TS2353: Object literal may only specify known properties, and 'filter' does not exist in type 'MemoryQuery'.
+src/providers/provider-manager.ts(509,25): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/providers/utils.ts(35,5): error TS2739: Type '{ anthropic: { provider: "anthropic"; apiKey: string | undefined; model: "claude-3-sonnet-20240229"; temperature: number; maxTokens: number; enableStreaming: true; enableCaching: true; timeout: number; retryAttempts: number; }; openai: { ...; }; google: { ...; }; cohere: { ...; }; ollama: { ...; }; }' is missing the following properties from type 'Record<LLMProvider, LLMProviderConfig>': "vscode-lm", custom, "llama-cpp", "github-copilot"
+src/providers/utils.ts(173,39): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/providers/utils.ts(176,35): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/__tests__/integration.test.ts(108,5): error TS18048: 'emptyFileIssue' is possibly 'undefined'.
+src/swarm/__tests__/integration.test.ts(149,5): error TS18048: 'sourceInfo.fileCount' is possibly 'undefined'.
+src/swarm/__tests__/integration.test.ts(150,5): error TS18048: 'sourceInfo.totalSize' is possibly 'undefined'.
+src/swarm/__tests__/integration.test.ts(159,7): error TS2739: Type '{ maxWorkers: number; conflictResolution: "merge"; }' is missing the following properties from type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; }': backup, verify, parallel, includePatterns, excludePatterns
+src/swarm/executor.ts(83,9): error TS2322: Type 'string' is not assignable to type '"error" | "info" | "debug" | "warn"'.
+src/swarm/json-output-aggregator.ts(265,25): error TS2532: Object is possibly 'undefined'.
+src/swarm/memory.ts(1341,25): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/optimizations/__tests__/optimization.test.ts(7,67): error TS2307: Cannot find module '@jest/globals' or its corresponding type declarations.
+src/swarm/optimizations/__tests__/optimization.test.ts(239,9): error TS2322: Type 'string' is not assignable to type 'TaskId'.
+src/swarm/optimizations/__tests__/optimization.test.ts(243,9): error TS2322: Type '"pending"' is not assignable to type 'TaskStatus'.
+src/swarm/optimizations/__tests__/optimization.test.ts(254,11): error TS2353: Object literal may only specify known properties, and 'timeout' does not exist in type 'TaskConstraints'.
+src/swarm/optimizations/__tests__/optimization.test.ts(259,9): error TS2322: Type 'undefined' is not assignable to type 'Record<string, any>'.
+src/swarm/optimizations/__tests__/optimization.test.ts(266,9): error TS2322: Type '"executor"' is not assignable to type 'AgentType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(273,49): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(283,9): error TS2322: Type 'string' is not assignable to type 'TaskId'.
+src/swarm/optimizations/__tests__/optimization.test.ts(285,9): error TS2322: Type '"query"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(287,9): error TS2322: Type '"pending"' is not assignable to type 'TaskStatus'.
+src/swarm/optimizations/__tests__/optimization.test.ts(298,11): error TS2353: Object literal may only specify known properties, and 'timeout' does not exist in type 'TaskConstraints'.
+src/swarm/optimizations/__tests__/optimization.test.ts(304,9): error TS2322: Type 'undefined' is not assignable to type 'Record<string, any>'.
+src/swarm/optimizations/__tests__/optimization.test.ts(315,50): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(318,50): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(330,9): error TS2322: Type 'string' is not assignable to type 'TaskId'.
+src/swarm/optimizations/__tests__/optimization.test.ts(334,9): error TS2322: Type '"pending"' is not assignable to type 'TaskStatus'.
+src/swarm/optimizations/__tests__/optimization.test.ts(345,11): error TS2353: Object literal may only specify known properties, and 'timeout' does not exist in type 'TaskConstraints'.
+src/swarm/optimizations/__tests__/optimization.test.ts(351,9): error TS2322: Type 'undefined' is not assignable to type 'Record<string, any>'.
+src/swarm/optimizations/__tests__/optimization.test.ts(358,9): error TS2322: Type '"executor"' is not assignable to type 'AgentType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(365,34): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/async-file-manager.ts(54,5): error TS2322: Type 'void | { path: string; operation: "write"; success: true; duration: number; size: number; error?: undefined; } | { path: string; operation: "write"; success: false; duration: number; error: Error; size?: undefined; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(97,5): error TS2322: Type 'void | { path: string; operation: "read"; success: true; duration: number; size: number; data: string; error?: undefined; } | { path: string; operation: "read"; success: false; duration: number; error: Error; size?: undefined; data?: undefined; }' is not assignable to type 'FileOperationResult & { data?: string | undefined; }'.
+  Type 'void' is not assignable to type 'FileOperationResult & { data?: string | undefined; }'.
+    Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(156,5): error TS2322: Type 'void | { path: string; operation: "delete"; success: true; duration: number; error?: undefined; } | { path: string; operation: "delete"; success: false; duration: number; error: Error; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(227,5): error TS2322: Type 'void | { path: string; operation: "write"; success: true; duration: number; size: number; error?: undefined; } | { path: string; operation: "write"; success: false; duration: number; error: Error; size?: undefined; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/prompt-cli.ts(5,10): error TS2305: Module '"./prompt-copier-enhanced.js"' has no exported member 'copyPrompts'.
+src/swarm/prompt-cli.ts(78,19): error TS2339: Property 'progressCallback' does not exist on type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; source: any; destination: any; } | { ...; }'.
+  Property 'progressCallback' does not exist on type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; source: any; destination: any; }'.
+  Property 'copyFilesParallel' is private in type 'PromptCopier' but not in type 'EnhancedPromptCopier'.
+src/swarm/prompt-copier-enhanced.ts(25,16): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'PromptCopier'.
+src/swarm/prompt-manager.ts(123,11): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/prompt-manager.ts(152,30): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/prompt-manager.ts(300,12): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/sparc-executor.ts(634,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ python: string; javascript: string; typescript: string; java: string; }'.
+src/swarm/sparc-executor.ts(650,7): error TS7053: Element implicitly has an 'any' type because expression of type '`${string}-${string}`' can't be used to index type '{ 'python-rest-api': { directories: string[]; files: string[]; }; 'javascript-rest-api': { directories: string[]; files: string[]; }; }'.

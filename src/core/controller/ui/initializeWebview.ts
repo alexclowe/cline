@@ -11,6 +11,20 @@ import { refreshVercelAiGatewayModels } from "../models/refreshVercelAiGatewayMo
 import { sendOpenRouterModelsEvent } from "../models/subscribeToOpenRouterModels"
 
 /**
+ * Converts OpenRouterModelInfo (with string maxTokens/contextWindow) to ModelInfo (with number maxTokens/contextWindow)
+ */
+function convertOpenRouterModelInfoToModelInfo(info: any): any {
+	if (!info) {
+		return info
+	}
+	return {
+		...info,
+		maxTokens: info.maxTokens ? Number(info.maxTokens) : info.maxTokens,
+		contextWindow: info.contextWindow ? Number(info.contextWindow) : info.contextWindow,
+	}
+}
+
+/**
  * Initialize webview when it launches
  * @param controller The controller instance
  * @param request The empty request
@@ -21,7 +35,16 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 		// Post last cached models in case the call to endpoint fails
 		controller.readOpenRouterModels().then((openRouterModels) => {
 			if (openRouterModels) {
-				sendOpenRouterModelsEvent(OpenRouterCompatibleModelInfo.create({ models: openRouterModels }))
+				// Convert models to have string maxTokens/contextWindow for OpenRouterCompatibleModelInfo
+				const convertedModels: Record<string, any> = {}
+				for (const [key, model] of Object.entries(openRouterModels)) {
+					convertedModels[key] = {
+						...model,
+						maxTokens: model.maxTokens?.toString(),
+						contextWindow: model.contextWindow?.toString(),
+					}
+				}
+				sendOpenRouterModelsEvent(OpenRouterCompatibleModelInfo.create({ models: convertedModels }))
 			}
 		})
 
@@ -42,7 +65,7 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 					if (modelId && response.models[modelId]) {
 						const updatedConfig = {
 							...apiConfiguration,
-							[modelInfoField]: response.models[modelId],
+							[modelInfoField]: convertOpenRouterModelInfoToModelInfo(response.models[modelId]),
 						}
 						controller.cacheService.setApiConfiguration(updatedConfig)
 						await controller.postStateToWebview()
@@ -55,12 +78,16 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 
 					// Update plan mode model info if we have a model ID
 					if (planModelId && response.models[planModelId]) {
-						updatedConfig.planModeOpenRouterModelInfo = response.models[planModelId]
+						updatedConfig.planModeOpenRouterModelInfo = convertOpenRouterModelInfoToModelInfo(
+							response.models[planModelId],
+						)
 					}
 
 					// Update act mode model info if we have a model ID
 					if (actModelId && response.models[actModelId]) {
-						updatedConfig.actModeOpenRouterModelInfo = response.models[actModelId]
+						updatedConfig.actModeOpenRouterModelInfo = convertOpenRouterModelInfoToModelInfo(
+							response.models[actModelId],
+						)
 					}
 
 					// Post state update if we updated any model info
@@ -88,7 +115,7 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 					if (modelId && response.models[modelId]) {
 						const updatedConfig = {
 							...apiConfiguration,
-							[modelInfoField]: response.models[modelId],
+							[modelInfoField]: convertOpenRouterModelInfoToModelInfo(response.models[modelId]),
 						}
 						controller.cacheService.setApiConfiguration(updatedConfig)
 						await controller.postStateToWebview()
@@ -101,12 +128,12 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 
 					// Update plan mode model info if we have a model ID
 					if (planModelId && response.models[planModelId]) {
-						updatedConfig.planModeGroqModelInfo = response.models[planModelId]
+						updatedConfig.planModeGroqModelInfo = convertOpenRouterModelInfoToModelInfo(response.models[planModelId])
 					}
 
 					// Update act mode model info if we have a model ID
 					if (actModelId && response.models[actModelId]) {
-						updatedConfig.actModeGroqModelInfo = response.models[actModelId]
+						updatedConfig.actModeGroqModelInfo = convertOpenRouterModelInfoToModelInfo(response.models[actModelId])
 					}
 
 					// Post state update if we updated any model info
@@ -133,7 +160,10 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 					const modelId = apiConfiguration[modelIdField]
 
 					if (modelId && response.models[modelId]) {
-						controller.cacheService.setGlobalState(modelInfoField, response.models[modelId])
+						controller.cacheService.setGlobalState(
+							modelInfoField,
+							convertOpenRouterModelInfoToModelInfo(response.models[modelId]),
+						)
 						await controller.postStateToWebview()
 					}
 				} else {
@@ -143,12 +173,18 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 
 					// Update plan mode model info if we have a model ID
 					if (planModelId && response.models[planModelId]) {
-						controller.cacheService.setGlobalState("planModeBasetenModelInfo", response.models[planModelId])
+						controller.cacheService.setGlobalState(
+							"planModeBasetenModelInfo",
+							convertOpenRouterModelInfoToModelInfo(response.models[planModelId]),
+						)
 					}
 
 					// Update act mode model info if we have a model ID
 					if (actModelId && response.models[actModelId]) {
-						controller.cacheService.setGlobalState("actModeBasetenModelInfo", response.models[actModelId])
+						controller.cacheService.setGlobalState(
+							"actModeBasetenModelInfo",
+							convertOpenRouterModelInfoToModelInfo(response.models[actModelId]),
+						)
 					}
 
 					// Post state update if we updated any model info
@@ -178,7 +214,7 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 					if (modelId && response.models[modelId]) {
 						const updatedConfig = {
 							...apiConfiguration,
-							[modelInfoField]: response.models[modelId],
+							[modelInfoField]: convertOpenRouterModelInfoToModelInfo(response.models[modelId]),
 						}
 						controller.cacheService.setApiConfiguration(updatedConfig)
 						await controller.postStateToWebview()
@@ -191,12 +227,16 @@ export async function initializeWebview(controller: Controller, _request: EmptyR
 
 					// Update plan mode model info if we have a model ID
 					if (planModelId && response.models[planModelId]) {
-						updatedConfig.planModeVercelAiGatewayModelInfo = response.models[planModelId]
+						updatedConfig.planModeVercelAiGatewayModelInfo = convertOpenRouterModelInfoToModelInfo(
+							response.models[planModelId],
+						)
 					}
 
 					// Update act mode model info if we have a model ID
 					if (actModelId && response.models[actModelId]) {
-						updatedConfig.actModeVercelAiGatewayModelInfo = response.models[actModelId]
+						updatedConfig.actModeVercelAiGatewayModelInfo = convertOpenRouterModelInfoToModelInfo(
+							response.models[actModelId],
+						)
 					}
 
 					// Post state update if we updated any model info

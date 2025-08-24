@@ -1,0 +1,320 @@
+COMPILATION ERRORS - Phase 11 Analysis:
+
+MEMORY SYSTEM ERRORS (12 errors):
+- Property access on possibly undefined values
+- Missing properties in type definitions
+- Null safety issues
+
+PROVIDER SYSTEM ERRORS (4 errors):
+- Missing LLM provider configurations
+- Undefined parameter handling
+
+MCP HUB TYPE MISMATCH (1 error):
+- Zod schema output type incompatibility
+
+SWARM SYSTEM ERRORS:
+- Missing imports and type definitions
+- Test file compilation issues
+- Type mismatches in agent/task definitions
+
+TEST FILES ERRORS (80+ errors):
+- Missing Jest/testing type declarations
+- Undefined test framework globals
+- Type mismatches in test data
+
+The errors fall into these categories:
+1. Memory and Provider null safety fixes
+2. Missing type exports in swarm system
+3. Test framework setup issues
+4. MCP type conversion problems
+src/swarm/__tests__/integration.test.ts(1,33): error TS2307: Cannot find module '../utils/error-handler.js' or its corresponding type declarations.
+src/swarm/__tests__/integration.test.ts(72,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(84,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(85,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(89,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(101,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(102,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(103,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(107,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(108,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(127,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(128,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(132,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(141,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(142,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(143,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(147,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(148,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(149,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(158,7): error TS2739: Type '{ maxWorkers: number; conflictResolution: "merge"; }' is missing the following properties from type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; }': backup, verify, parallel, includePatterns, excludePatterns
+src/swarm/__tests__/integration.test.ts(169,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(170,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(171,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(186,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(194,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(206,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(218,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(224,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(225,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(226,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(242,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/integration.test.ts(248,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(1,33): error TS2307: Cannot find module '../utils/error-handler.js' or its corresponding type declarations.
+src/swarm/__tests__/prompt-copier.test.ts(56,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(57,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(58,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(62,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(72,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(73,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(83,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(84,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(99,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(100,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(104,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(117,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(118,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(126,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(139,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(143,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(144,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(145,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(157,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(158,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(164,7): error TS2304: Cannot find name 'jest'.
+src/swarm/__tests__/prompt-copier.test.ts(178,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(179,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(181,19): error TS2503: Cannot find namespace 'jest'.
+src/swarm/__tests__/prompt-copier.test.ts(193,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(194,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(198,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(214,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(215,7): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(251,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(252,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(253,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(257,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(258,6): error TS2554: Expected 1-2 arguments, but got 3.
+src/swarm/__tests__/prompt-copier.test.ts(278,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(279,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(280,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(291,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(299,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(300,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(308,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(309,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(310,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(311,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(332,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(333,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(342,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(343,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(360,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(361,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(362,5): error TS2304: Cannot find name 'expect'.
+src/swarm/__tests__/prompt-copier.test.ts(373,5): error TS2304: Cannot find name 'expect'.
+src/swarm/claude-code-interface.ts(24,3): error TS2724: '"./types.js"' has no exported member named 'SwarmAgent'. Did you mean 'SwarmEvent'?
+src/swarm/claude-code-interface.ts(25,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmTask'. Did you mean to use 'import SwarmTask from "./types.js"' instead?
+src/swarm/claude-code-interface.ts(30,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmExecutionContext'. Did you mean to use 'import SwarmExecutionContext from "./types.js"' instead?
+src/swarm/claude-code-interface.ts(133,30): error TS2345: Argument of type 'string' is not assignable to parameter of type 'LoggingConfig'.
+src/swarm/claude-code-interface.ts(244,13): error TS7022: 'process' implicitly has type 'any' because it does not have a type annotation and is referenced directly or indirectly in its own initializer.
+src/swarm/claude-code-interface.ts(247,14): error TS2448: Block-scoped variable 'process' used before its declaration.
+src/swarm/claude-code-interface.ts(351,29): error TS2339: Property 'maxRetries' does not exist on type 'Partial<ClaudeExecutionOptions>'.
+src/swarm/claude-code-interface.ts(371,33): error TS2339: Property 'result' does not exist on type 'ExecutionResult'.
+src/swarm/claude-code-interface.ts(865,35): error TS2339: Property 'workingDirectory' does not exist on type 'Partial<ClaudeExecutionOptions>'.
+src/swarm/claude-flow-executor.ts(10,34): error TS2307: Cannot find module '../utils/paths.js' or its corresponding type declarations.
+src/swarm/claude-flow-executor.ts(83,9): error TS2353: Object literal may only specify known properties, and 'error' does not exist in type 'TaskResult'.
+src/swarm/claude-flow-executor.ts(99,9): error TS2353: Object literal may only specify known properties, and 'error' does not exist in type 'TaskResult'.
+src/swarm/claude-flow-executor.ts(150,12): error TS7053: Element implicitly has an 'any' type because expression of type 'AgentType' can't be used to index type '{ coding: string; testing: string; analysis: string; documentation: string; research: string; review: string; deployment: string; optimization: string; integration: string; coder: string; tester: string; ... 4 more ...; coordinator: string; }'.
+  Property 'developer' does not exist on type '{ coding: string; testing: string; analysis: string; documentation: string; research: string; review: string; deployment: string; optimization: string; integration: string; coder: string; tester: string; ... 4 more ...; coordinator: string; }'.
+src/swarm/claude-flow-executor.ts(150,35): error TS7053: Element implicitly has an 'any' type because expression of type 'TaskType' can't be used to index type '{ coding: string; testing: string; analysis: string; documentation: string; research: string; review: string; deployment: string; optimization: string; integration: string; coder: string; tester: string; ... 4 more ...; coordinator: string; }'.
+  Property 'maintenance' does not exist on type '{ coding: string; testing: string; analysis: string; documentation: string; research: string; review: string; deployment: string; optimization: string; integration: string; coder: string; tester: string; ... 4 more ...; coordinator: string; }'.
+src/swarm/claude-flow-executor.ts(221,34): error TS7006: Parameter 'match' implicitly has an 'any' type.
+src/swarm/coordinator.ts(30,53): error TS2307: Cannot find module '../utils/paths.js' or its corresponding type declarations.
+src/swarm/coordinator.ts(203,31): error TS2345: Argument of type 'AgentId' is not assignable to parameter of type 'string'.
+src/swarm/coordinator.ts(229,32): error TS2345: Argument of type 'AgentId' is not assignable to parameter of type 'string'.
+src/swarm/coordinator.ts(272,7): error TS2741: Property 'resourceLimits' is missing in type '{ minQuality: number; requiredApprovals: never[]; allowedFailures: number; recoveryTime: number; milestones: never[]; }' but required in type 'SwarmConstraints'.
+src/swarm/coordinator.ts(691,7): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/swarm/coordinator.ts(1603,35): error TS2367: This comparison appears to be unintentional because the types 'SwarmMode' and '"parallel"' have no overlap.
+src/swarm/coordinator.ts(1728,58): error TS2345: Argument of type '"generic"' is not assignable to parameter of type 'TaskType'.
+src/swarm/coordinator.ts(1900,9): error TS2322: Type '"task.queued"' is not assignable to type 'EventType'.
+src/swarm/coordinator.ts(1994,13): error TS2322: Type '"task.queued"' is not assignable to type 'EventType'.
+src/swarm/coordinator.ts(2089,13): error TS2322: Type '"objective.completed" | "objective.failed"' is not assignable to type 'EventType'.
+  Type '"objective.completed"' is not assignable to type 'EventType'.
+src/swarm/coordinator.ts(2257,51): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.
+src/swarm/coordinator.ts(2262,30): error TS2339: Property 'logging' does not exist on type 'SwarmConfig'.
+src/swarm/coordinator.ts(2266,62): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/swarm/coordinator.ts(2392,13): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2401,32): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2412,27): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2416,14): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2565,13): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2610,25): error TS2339: Property 'createGradioApp' does not exist on type 'SwarmCoordinator'.
+src/swarm/coordinator.ts(2613,25): error TS2339: Property 'createPythonRestAPI' does not exist on type 'SwarmCoordinator'.
+src/swarm/coordinator.ts(2618,13): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2805,13): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2883,11): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2916,11): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2953,11): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(2998,11): error TS2304: Cannot find name 'Deno'.
+src/swarm/coordinator.ts(3044,11): error TS2304: Cannot find name 'Deno'.
+src/swarm/direct-executor.ts(115,50): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/direct-executor.ts(116,47): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/direct-executor.ts(117,47): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/direct-executor.ts(118,51): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/direct-executor.ts(119,56): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/direct-executor.ts(120,56): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/direct-executor.ts(121,38): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/executor-v2.ts(16,8): error TS2307: Cannot find module '../cli/utils/environment-detector.js' or its corresponding type declarations.
+src/swarm/executor-v2.ts(26,51): error TS2304: Cannot find name 'ClaudeExecutionOptions'.
+src/swarm/executor-v2.ts(34,37): error TS2304: Cannot find name 'TaskExecutor'.
+src/swarm/executor-v2.ts(37,31): error TS2304: Cannot find name 'ExecutionConfig'.
+src/swarm/executor-v2.ts(41,10): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(52,14): error TS2304: Cannot find name 'ExecutionResult'.
+src/swarm/executor-v2.ts(58,12): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(69,20): error TS2339: Property 'createExecutionContext' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(75,14): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(87,22): error TS2339: Property 'createExecutionContext' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(100,14): error TS2304: Cannot find name 'ExecutionContext'.
+src/swarm/executor-v2.ts(102,14): error TS2304: Cannot find name 'ExecutionResult'.
+src/swarm/executor-v2.ts(104,29): error TS2339: Property 'timeout' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(104,45): error TS2339: Property 'config' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(127,10): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(146,16): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(157,19): error TS2339: Property 'config' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(167,29): error TS2339: Property 'detached' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(178,14): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(191,22): error TS2339: Property 'config' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(192,20): error TS2339: Property 'emit' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(208,20): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(214,22): error TS2339: Property 'config' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(215,20): error TS2339: Property 'emit' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(227,16): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(242,16): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(253,46): error TS2339: Property 'collectResourceUsage' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(256,42): error TS2339: Property 'collectArtifacts' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(258,27): error TS2304: Cannot find name 'ExecutionResult'.
+src/swarm/executor-v2.ts(281,18): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(301,14): error TS2339: Property 'logger' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(314,6): error TS2304: Cannot find name 'ClaudeCommand'.
+src/swarm/executor-v2.ts(319,25): error TS2339: Property 'buildClaudePrompt' does not exist on type 'TaskExecutorV2'.
+src/swarm/executor-v2.ts(321,17): error TS2339: Property 'useStdin' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(333,17): error TS2339: Property 'model' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(334,36): error TS2339: Property 'model' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(338,17): error TS2339: Property 'maxTokens' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(339,41): error TS2339: Property 'maxTokens' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(343,17): error TS2339: Property 'temperature' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(344,42): error TS2339: Property 'temperature' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(350,15): error TS2339: Property 'dangerouslySkipPermissions' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(367,17): error TS2339: Property 'outputFormat' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(368,44): error TS2339: Property 'outputFormat' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(385,24): error TS2339: Property 'claudePath' does not exist on type 'ClaudeExecutionOptionsV2'.
+src/swarm/executor-v2.ts(414,38): error TS2304: Cannot find name 'ResourceUsage'.
+src/swarm/executor.ts(83,9): error TS2322: Type 'string' is not assignable to type '"error" | "info" | "debug" | "warn"'.
+src/swarm/hive-mind-integration.ts(16,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmExecutionContext'. Did you mean to use 'import SwarmExecutionContext from "./types.js"' instead?
+src/swarm/hive-mind-integration.ts(17,3): error TS2724: '"./types.js"' has no exported member named 'SwarmAgent'. Did you mean 'SwarmEvent'?
+src/swarm/hive-mind-integration.ts(18,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmTask'. Did you mean to use 'import SwarmTask from "./types.js"' instead?
+src/swarm/hive-mind-integration.ts(264,30): error TS2345: Argument of type 'string' is not assignable to parameter of type 'LoggingConfig'.
+src/swarm/hive-mind-integration.ts(687,66): error TS2345: Argument of type '{ namespace: string; type: string; }' is not assignable to parameter of type 'string'.
+src/swarm/hive-mind-integration.ts(692,27): error TS2488: Type 'MemoryEntry' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/swarm/hive-mind-integration.ts(692,27): error TS18048: 'knowledgeEntries' is possibly 'undefined'.
+src/swarm/hive-mind-integration.ts(712,69): error TS2345: Argument of type '{ namespace: string; type: string; }' is not assignable to parameter of type 'string'.
+src/swarm/hive-mind-integration.ts(717,27): error TS2488: Type 'MemoryEntry' must have a '[Symbol.iterator]()' method that returns an iterator.
+src/swarm/hive-mind-integration.ts(717,27): error TS18048: 'intelligenceEntries' is possibly 'undefined'.
+src/swarm/hive-mind-integration.ts(746,9): error TS2322: Type '"knowledge-base"' is not assignable to type '"error" | "metadata" | "observation" | "insight" | "decision" | "artifact" | "swarm-definition" | "health-check" | "task-definition" | "swarm-results" | "agent_config" | "task_analysis" | "historical_context" | "final_stats" | "aggregated-result" | "result-report"'.
+src/swarm/hive-mind-integration.ts(773,9): error TS2322: Type '"collective-intelligence"' is not assignable to type '"error" | "metadata" | "observation" | "insight" | "decision" | "artifact" | "swarm-definition" | "health-check" | "task-definition" | "swarm-results" | "agent_config" | "task_analysis" | "historical_context" | "final_stats" | "aggregated-result" | "result-report"'.
+src/swarm/hive-mind-integration.ts(979,50): error TS7006: Parameter 'keyword' implicitly has an 'any' type.
+src/swarm/index.ts(18,1): error TS2308: Module './executor.js' has already exported a member named 'ExecutionMetrics'. Consider explicitly re-exporting to resolve the ambiguity.
+src/swarm/json-output-aggregator.ts(265,25): error TS2532: Object is possibly 'undefined'.
+src/swarm/mcp-integration-wrapper.ts(12,39): error TS2307: Cannot find module '../mcp/claude-flow-tools.js' or its corresponding type declarations.
+src/swarm/mcp-integration-wrapper.ts(13,37): error TS2307: Cannot find module '../mcp/ruv-swarm-tools.js' or its corresponding type declarations.
+src/swarm/mcp-integration-wrapper.ts(17,3): error TS2724: '"./types.js"' has no exported member named 'SwarmAgent'. Did you mean 'SwarmEvent'?
+src/swarm/mcp-integration-wrapper.ts(18,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmTask'. Did you mean to use 'import SwarmTask from "./types.js"' instead?
+src/swarm/mcp-integration-wrapper.ts(20,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmExecutionContext'. Did you mean to use 'import SwarmExecutionContext from "./types.js"' instead?
+src/swarm/mcp-integration-wrapper.ts(84,30): error TS2345: Argument of type 'string' is not assignable to parameter of type 'LoggingConfig'.
+src/swarm/mcp-integration-wrapper.ts(407,5): error TS2741: Property 'logger' is missing in type '{ sessionId: string; orchestrator: AdvancedSwarmOrchestrator; agent: SwarmAgent; task: any; swarmId: string; executionId: string; timeout: number; maxRetries: number; }' but required in type 'MCPExecutionContext'.
+src/swarm/mcp-integration-wrapper.ts(622,36): error TS7006: Parameter 'capability' implicitly has an 'any' type.
+src/swarm/memory.ts(864,7): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type 'Record<MemoryType, number>'.
+  No index signature with a parameter of type 'string' was found on type 'Record<MemoryType, number>'.
+src/swarm/memory.ts(1337,25): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/optimizations/__tests__/optimization.test.ts(7,67): error TS2307: Cannot find module '@jest/globals' or its corresponding type declarations.
+src/swarm/optimizations/__tests__/optimization.test.ts(239,9): error TS2322: Type 'string' is not assignable to type 'TaskId'.
+src/swarm/optimizations/__tests__/optimization.test.ts(243,9): error TS2322: Type '"pending"' is not assignable to type 'TaskStatus'.
+src/swarm/optimizations/__tests__/optimization.test.ts(254,11): error TS2353: Object literal may only specify known properties, and 'timeout' does not exist in type 'TaskConstraints'.
+src/swarm/optimizations/__tests__/optimization.test.ts(259,9): error TS2322: Type 'undefined' is not assignable to type 'Record<string, any>'.
+src/swarm/optimizations/__tests__/optimization.test.ts(266,9): error TS2322: Type '"executor"' is not assignable to type 'AgentType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(277,21): error TS2339: Property 'taskId' does not exist on type 'TaskResult'.
+src/swarm/optimizations/__tests__/optimization.test.ts(278,21): error TS2339: Property 'agentId' does not exist on type 'TaskResult'.
+src/swarm/optimizations/__tests__/optimization.test.ts(283,9): error TS2322: Type 'string' is not assignable to type 'TaskId'.
+src/swarm/optimizations/__tests__/optimization.test.ts(285,9): error TS2322: Type '"query"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(287,9): error TS2322: Type '"pending"' is not assignable to type 'TaskStatus'.
+src/swarm/optimizations/__tests__/optimization.test.ts(298,11): error TS2353: Object literal may only specify known properties, and 'timeout' does not exist in type 'TaskConstraints'.
+src/swarm/optimizations/__tests__/optimization.test.ts(304,9): error TS2322: Type 'undefined' is not assignable to type 'Record<string, any>'.
+src/swarm/optimizations/__tests__/optimization.test.ts(309,13): error TS2739: Type '{ id: string; type: "analyst"; }' is missing the following properties from type 'AgentId': swarmId, instance
+src/swarm/optimizations/__tests__/optimization.test.ts(330,9): error TS2322: Type 'string' is not assignable to type 'TaskId'.
+src/swarm/optimizations/__tests__/optimization.test.ts(334,9): error TS2322: Type '"pending"' is not assignable to type 'TaskStatus'.
+src/swarm/optimizations/__tests__/optimization.test.ts(345,11): error TS2353: Object literal may only specify known properties, and 'timeout' does not exist in type 'TaskConstraints'.
+src/swarm/optimizations/__tests__/optimization.test.ts(351,9): error TS2322: Type 'undefined' is not assignable to type 'Record<string, any>'.
+src/swarm/optimizations/__tests__/optimization.test.ts(358,9): error TS2322: Type '"executor"' is not assignable to type 'AgentType'.
+src/swarm/optimizations/async-file-manager.ts(54,5): error TS2322: Type 'void | { path: string; operation: "write"; success: true; duration: number; size: number; error?: undefined; } | { path: string; operation: "write"; success: false; duration: number; error: Error; size?: undefined; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(97,5): error TS2322: Type 'void | { path: string; operation: "read"; success: true; duration: number; size: number; data: string; error?: undefined; } | { path: string; operation: "read"; success: false; duration: number; error: Error; size?: undefined; data?: undefined; }' is not assignable to type 'FileOperationResult & { data?: string | undefined; }'.
+  Type 'void' is not assignable to type 'FileOperationResult & { data?: string | undefined; }'.
+    Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(156,5): error TS2322: Type 'void | { path: string; operation: "delete"; success: true; duration: number; error?: undefined; } | { path: string; operation: "delete"; success: false; duration: number; error: Error; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(227,5): error TS2322: Type 'void | { path: string; operation: "write"; success: true; duration: number; size: number; error?: undefined; } | { path: string; operation: "write"; success: false; duration: number; error: Error; size?: undefined; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/index.ts(26,30): error TS2304: Cannot find name 'ClaudeConnectionPool'.
+src/swarm/optimizations/index.ts(27,27): error TS2304: Cannot find name 'AsyncFileManager'.
+src/swarm/optimizations/index.ts(28,24): error TS2304: Cannot find name 'OptimizedExecutor'.
+src/swarm/optimizations/optimized-executor.ts(141,31): error TS2345: Argument of type 'TaskId' is not assignable to parameter of type 'string'.
+src/swarm/optimizations/optimized-executor.ts(150,25): error TS2339: Property 'metadata' does not exist on type 'TaskDefinition'.
+src/swarm/optimizations/optimized-executor.ts(152,31): error TS2339: Property 'metadata' does not exist on type 'TaskDefinition'.
+src/swarm/optimizations/optimized-executor.ts(178,11): error TS2353: Object literal may only specify known properties, and 'taskId' does not exist in type 'TaskResult'.
+src/swarm/optimizations/optimized-executor.ts(200,11): error TS2322: Type 'TaskId' is not assignable to type 'string'.
+src/swarm/optimizations/optimized-executor.ts(225,11): error TS2353: Object literal may only specify known properties, and 'taskId' does not exist in type 'TaskResult'.
+src/swarm/optimizations/optimized-executor.ts(244,11): error TS2322: Type 'TaskId' is not assignable to type 'string'.
+src/swarm/optimizations/optimized-executor.ts(253,38): error TS2345: Argument of type 'TaskId' is not assignable to parameter of type 'string'.
+src/swarm/optimizations/optimized-executor.ts(257,5): error TS2322: Type 'void | TaskResult' is not assignable to type 'TaskResult'.
+  Type 'void' is not assignable to type 'TaskResult'.
+src/swarm/optimizations/optimized-executor.ts(268,14): error TS2339: Property 'metadata' does not exist on type 'TaskDefinition'.
+src/swarm/optimizations/optimized-executor.ts(271,23): error TS2339: Property 'metadata' does not exist on type 'TaskDefinition'.
+src/swarm/optimizations/optimized-executor.ts(278,21): error TS2339: Property 'objective' does not exist on type 'TaskDefinition'.
+src/swarm/optimizations/optimized-executor.ts(287,71): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/swarm/optimizations/optimized-executor.ts(295,67): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/swarm/optimizations/optimized-executor.ts(305,33): error TS2339: Property 'objective' does not exist on type 'TaskDefinition'.
+src/swarm/optimizations/optimized-executor.ts(305,66): error TS2339: Property 'metadata' does not exist on type 'TaskDefinition'.
+src/swarm/prompt-cli.ts(5,10): error TS2305: Module '"./prompt-copier-enhanced.js"' has no exported member 'copyPrompts'.
+src/swarm/prompt-cli.ts(78,19): error TS2339: Property 'progressCallback' does not exist on type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; source: any; destination: any; } | { ...; }'.
+  Property 'progressCallback' does not exist on type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; source: any; destination: any; }'.
+src/swarm/prompt-cli.ts(78,39): error TS7006: Parameter 'progress' implicitly has an 'any' type.
+src/swarm/prompt-cli.ts(111,32): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/swarm/prompt-copier-enhanced.ts(17,14): error TS2415: Class 'EnhancedPromptCopier' incorrectly extends base class 'PromptCopier'.
+  Property 'copyFilesParallel' is private in type 'PromptCopier' but not in type 'EnhancedPromptCopier'.
+src/swarm/prompt-copier-enhanced.ts(25,16): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'PromptCopier'.
+src/swarm/prompt-manager.ts(123,11): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/prompt-manager.ts(152,30): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/prompt-manager.ts(300,12): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/result-aggregator.ts(17,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmExecutionContext'. Did you mean to use 'import SwarmExecutionContext from "./types.js"' instead?
+src/swarm/result-aggregator.ts(19,3): error TS2614: Module '"./types.js"' has no exported member 'SwarmTask'. Did you mean to use 'import SwarmTask from "./types.js"' instead?
+src/swarm/result-aggregator.ts(20,3): error TS2724: '"./types.js"' has no exported member named 'SwarmAgent'. Did you mean 'SwarmEvent'?
+src/swarm/result-aggregator.ts(180,30): error TS2345: Argument of type 'string' is not assignable to parameter of type 'LoggingConfig'.
+src/swarm/result-aggregator.ts(444,59): error TS2345: Argument of type '{ namespace: string; type: string; }' is not assignable to parameter of type 'string'.
+src/swarm/result-aggregator.ts(449,21): error TS18048: 'contextData' is possibly 'undefined'.
+src/swarm/result-aggregator.ts(449,33): error TS2339: Property 'length' does not exist on type 'MemoryEntry'.
+src/swarm/result-aggregator.ts(450,20): error TS18048: 'contextData' is possibly 'undefined'.
+src/swarm/result-aggregator.ts(450,20): error TS7053: Element implicitly has an 'any' type because expression of type '0' can't be used to index type 'MemoryEntry'.
+  Property '0' does not exist on type 'MemoryEntry'.
+src/swarm/sparc-executor.ts(634,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ python: string; javascript: string; typescript: string; java: string; }'.
+  No index signature with a parameter of type 'string' was found on type '{ python: string; javascript: string; typescript: string; java: string; }'.
+src/swarm/sparc-executor.ts(650,7): error TS7053: Element implicitly has an 'any' type because expression of type '`${string}-${string}`' can't be used to index type '{ 'python-rest-api': { directories: string[]; files: string[]; }; 'javascript-rest-api': { directories: string[]; files: string[]; }; }'.

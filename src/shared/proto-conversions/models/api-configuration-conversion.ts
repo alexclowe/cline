@@ -48,8 +48,8 @@ function convertModelInfoToProtoOpenRouter(info: ModelInfo | undefined): OpenRou
 	}
 
 	return {
-		maxTokens: info.maxTokens,
-		contextWindow: info.contextWindow,
+		maxTokens: String(info.maxTokens),
+		contextWindow: String(info.contextWindow),
 		supportsImages: info.supportsImages,
 		supportsPromptCache: info.supportsPromptCache ?? false,
 		inputPrice: info.inputPrice,
@@ -70,8 +70,8 @@ function convertProtoToModelInfo(info: OpenRouterModelInfo | undefined): ModelIn
 	}
 
 	return {
-		maxTokens: info.maxTokens,
-		contextWindow: info.contextWindow,
+		maxTokens: Number(info.maxTokens),
+		contextWindow: Number(info.contextWindow),
 		supportsImages: info.supportsImages,
 		supportsPromptCache: info.supportsPromptCache,
 		inputPrice: info.inputPrice,

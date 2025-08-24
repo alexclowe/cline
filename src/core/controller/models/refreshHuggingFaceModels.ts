@@ -5,6 +5,7 @@ import { fileExistsAtPath } from "@utils/fs"
 import axios from "axios"
 import fs from "fs/promises"
 import path from "path"
+import { numberToString } from "../../../shared/proto-conversions/type-utils"
 import { Controller } from ".."
 
 /**
@@ -47,8 +48,8 @@ export async function refreshHuggingFaceModels(
 			for (const rawModel of rawModels) {
 				const providersList = rawModel.providers?.map((provider: { provider: string }) => provider.provider)?.join(", ")
 				const modelInfo = OpenRouterModelInfo.create({
-					maxTokens: 8192, // HF doesn't provide max_tokens, use default
-					contextWindow: 128_000, // FIXME: HF doesn't provide context window, use default
+					maxTokens: numberToString(8192), // HF doesn't provide max_tokens, use default
+					contextWindow: numberToString(128_000), // FIXME: HF doesn't provide context window, use default
 					supportsImages: false, // Most models don't support images
 					supportsPromptCache: false,
 					inputPrice: 0, // Will be set based on providers
@@ -61,8 +62,8 @@ export async function refreshHuggingFaceModels(
 				// Add model-specific configurations if we have them in our static models
 				if (rawModel.id in huggingFaceModels) {
 					const staticModel = huggingFaceModels[rawModel.id as keyof typeof huggingFaceModels]
-					modelInfo.maxTokens = staticModel.maxTokens
-					modelInfo.contextWindow = staticModel.contextWindow
+					modelInfo.maxTokens = numberToString(staticModel.maxTokens)
+					modelInfo.contextWindow = numberToString(staticModel.contextWindow)
 					modelInfo.supportsImages = staticModel.supportsImages
 					modelInfo.supportsPromptCache = staticModel.supportsPromptCache
 					modelInfo.inputPrice = staticModel.inputPrice
@@ -94,8 +95,8 @@ export async function refreshHuggingFaceModels(
 		if (Object.keys(models).length === 0) {
 			for (const [modelId, modelInfo] of Object.entries(huggingFaceModels)) {
 				models[modelId] = OpenRouterModelInfo.create({
-					maxTokens: modelInfo.maxTokens,
-					contextWindow: modelInfo.contextWindow,
+					maxTokens: numberToString(modelInfo.maxTokens),
+					contextWindow: numberToString(modelInfo.contextWindow),
 					supportsImages: modelInfo.supportsImages,
 					supportsPromptCache: modelInfo.supportsPromptCache,
 					inputPrice: modelInfo.inputPrice,

@@ -1,0 +1,89 @@
+
+> claude-dev@3.26.3 compile
+> npm run check-types && npm run lint && node esbuild.mjs
+
+
+> claude-dev@3.26.3 check-types
+> npm run protos && npx tsc --noEmit && cd webview-ui && npx tsc -b --noEmit
+
+
+> claude-dev@3.26.3 protos
+> node scripts/build-proto.mjs
+
+Compiling Protocol Buffers...
+Processing 20 proto files from C:\Users\alelowe\Documents\GitHub\cline\proto
+
+Warning: Found 21 fields using 64-bit integer types
+Generated ProtoBus files at:
+- C:\Users\alelowe\Documents\GitHub\cline\webview-ui\src\services\grpc-client.ts
+- C:\Users\alelowe\Documents\GitHub\cline\src\generated\hosts\vscode\protobus-service-types.ts
+- C:\Users\alelowe\Documents\GitHub\cline\src\generated\hosts\vscode\protobus-services.ts
+- C:\Users\alelowe\Documents\GitHub\cline\src\generated\hosts\standalone\protobus-server-setup.ts
+Generated Host Bridge client files at:
+- C:\Users\alelowe\Documents\GitHub\cline\src\generated\hosts\host-bridge-client-types.ts
+- C:\Users\alelowe\Documents\GitHub\cline\src\generated\hosts\standalone\host-bridge-clients.ts
+- C:\Users\alelowe\Documents\GitHub\cline\src\generated\hosts\vscode\hostbridge-grpc-service-config.ts
+
+> claude-dev@3.26.3 postprotos
+> biome format src/shared/proto src/core/controller src/hosts/ webview-ui/src/services src/generated --write --no-errors-on-unmatched
+
+Formatted 180 files in 108ms. Fixed 1 file.
+src/memory/distributed-memory.ts(625,7): error TS2353: Object literal may only specify known properties, and 'filter' does not exist in type 'MemoryQuery'.
+src/providers/provider-manager.ts(510,25): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/__tests__/integration.test.ts(108,5): error TS18048: 'emptyFileIssue' is possibly 'undefined'.
+src/swarm/__tests__/integration.test.ts(149,5): error TS18048: 'sourceInfo.fileCount' is possibly 'undefined'.
+src/swarm/__tests__/integration.test.ts(150,5): error TS18048: 'sourceInfo.totalSize' is possibly 'undefined'.
+src/swarm/__tests__/integration.test.ts(159,7): error TS2739: Type '{ maxWorkers: number; conflictResolution: "merge"; }' is missing the following properties from type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; }': backup, verify, parallel, includePatterns, excludePatterns
+src/swarm/executor.ts(83,9): error TS2322: Type 'string' is not assignable to type '"error" | "info" | "debug" | "warn"'.
+src/swarm/json-output-aggregator.ts(265,25): error TS2532: Object is possibly 'undefined'.
+src/swarm/memory.ts(1341,25): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/swarm/optimizations/__tests__/optimization.test.ts(217,62): error TS2345: Argument of type '{ total: number; inUse: number; idle: number; }' is not assignable to parameter of type '{ total: number; inUse: number; idle: number; waitingQueue: number; totalUseCount: number; }'.
+  Type '{ total: number; inUse: number; idle: number; }' is missing the following properties from type '{ total: number; inUse: number; idle: number; waitingQueue: number; totalUseCount: number; }': waitingQueue, totalUseCount
+src/swarm/optimizations/__tests__/optimization.test.ts(251,62): error TS2345: Argument of type '{ total: number; inUse: number; idle: number; }' is not assignable to parameter of type '{ total: number; inUse: number; idle: number; waitingQueue: number; totalUseCount: number; }'.
+  Type '{ total: number; inUse: number; idle: number; }' is missing the following properties from type '{ total: number; inUse: number; idle: number; waitingQueue: number; totalUseCount: number; }': waitingQueue, totalUseCount
+src/swarm/optimizations/__tests__/optimization.test.ts(321,49): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+  Types of property 'type' are incompatible.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(378,50): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+  Types of property 'type' are incompatible.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(381,50): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+  Types of property 'type' are incompatible.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/__tests__/optimization.test.ts(386,9): error TS2561: Object literal may only specify known properties, but 'averageExecutionTime' does not exist in type 'ExecutionMetrics'. Did you mean to write 'avgExecutionTime'?
+src/swarm/optimizations/__tests__/optimization.test.ts(398,41): error TS2345: Argument of type '{ totalExecuted: number; }' is not assignable to parameter of type 'ExecutionMetrics'.
+  Type '{ totalExecuted: number; }' is missing the following properties from type 'ExecutionMetrics': totalSucceeded, totalFailed, avgExecutionTime, cacheHitRate, and 2 more.
+src/swarm/optimizations/__tests__/optimization.test.ts(399,42): error TS2345: Argument of type '{ totalExecuted: number; }' is not assignable to parameter of type 'ExecutionMetrics'.
+  Type '{ totalExecuted: number; }' is missing the following properties from type 'ExecutionMetrics': totalSucceeded, totalFailed, avgExecutionTime, cacheHitRate, and 2 more.
+src/swarm/optimizations/__tests__/optimization.test.ts(451,34): error TS2345: Argument of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskDefinition' is not assignable to parameter of type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskDefinition'.
+  Types of property 'type' are incompatible.
+    Type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/types").TaskType' is not assignable to type 'import("C:/Users/alelowe/Documents/GitHub/cline/src/swarm/swarm-types").TaskType'.
+      Type '"data-analysis"' is not assignable to type 'TaskType'.
+src/swarm/optimizations/async-file-manager.ts(54,5): error TS2322: Type 'void | { path: string; operation: "write"; success: true; duration: number; size: number; error?: undefined; } | { path: string; operation: "write"; success: false; duration: number; error: Error; size?: undefined; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(97,5): error TS2322: Type 'void | { path: string; operation: "read"; success: true; duration: number; size: number; data: string; error?: undefined; } | { path: string; operation: "read"; success: false; duration: number; error: Error; size?: undefined; data?: undefined; }' is not assignable to type 'FileOperationResult & { data?: string | undefined; }'.
+  Type 'void' is not assignable to type 'FileOperationResult & { data?: string | undefined; }'.
+    Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(156,5): error TS2322: Type 'void | { path: string; operation: "delete"; success: true; duration: number; error?: undefined; } | { path: string; operation: "delete"; success: false; duration: number; error: Error; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/optimizations/async-file-manager.ts(227,5): error TS2322: Type 'void | { path: string; operation: "write"; success: true; duration: number; size: number; error?: undefined; } | { path: string; operation: "write"; success: false; duration: number; error: Error; size?: undefined; }' is not assignable to type 'FileOperationResult'.
+  Type 'void' is not assignable to type 'FileOperationResult'.
+src/swarm/prompt-cli.ts(5,10): error TS2305: Module '"./prompt-copier-enhanced.js"' has no exported member 'copyPrompts'.
+src/swarm/prompt-cli.ts(78,19): error TS2339: Property 'progressCallback' does not exist on type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; source: any; destination: any; } | { ...; }'.
+  Property 'progressCallback' does not exist on type '{ backup: boolean; verify: boolean; parallel: boolean; maxWorkers: number; conflictResolution: "merge" | "overwrite" | "skip" | "backup"; includePatterns: string[]; excludePatterns: string[]; source: any; destination: any; }'.
+src/swarm/prompt-cli.ts(78,39): error TS7006: Parameter 'progress' implicitly has an 'any' type.
+src/swarm/prompt-cli.ts(111,32): error TS7006: Parameter 'error' implicitly has an 'any' type.
+src/swarm/prompt-copier-enhanced.ts(17,14): error TS2415: Class 'EnhancedPromptCopier' incorrectly extends base class 'PromptCopier'.
+  Property 'copyFilesParallel' is private in type 'PromptCopier' but not in type 'EnhancedPromptCopier'.
+src/swarm/prompt-copier-enhanced.ts(25,16): error TS4114: This member must have an 'override' modifier because it overrides a member in the base class 'PromptCopier'.
+src/swarm/prompt-manager.ts(123,11): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/prompt-manager.ts(152,30): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/prompt-manager.ts(300,12): error TS2663: Cannot find name 'copyPrompts'. Did you mean the instance member 'this.copyPrompts'?
+src/swarm/sparc-executor.ts(634,12): error TS7053: Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{ python: string; javascript: string; typescript: string; java: string; }'.
+  No index signature with a parameter of type 'string' was found on type '{ python: string; javascript: string; typescript: string; java: string; }'.
+src/swarm/sparc-executor.ts(650,7): error TS7053: Element implicitly has an 'any' type because expression of type '`${string}-${string}`' can't be used to index type '{ 'python-rest-api': { directories: string[]; files: string[]; }; 'javascript-rest-api': { directories: string[]; files: string[]; }; }'.

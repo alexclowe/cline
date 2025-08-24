@@ -7,6 +7,7 @@ import cloneDeep from "clone-deep"
 import fs from "fs/promises"
 import path from "path"
 import { CLAUDE_SONNET_4_1M_TIERS, clineMicrowaveAlphaModelInfo, openRouterClaudeSonnet41mModelId } from "@/shared/api"
+import { numberToString } from "../../../shared/proto-conversions/type-utils"
 import { Controller } from ".."
 
 type OpenRouterSupportedParams =
@@ -94,8 +95,8 @@ export async function refreshOpenRouterModels(
 			for (const rawModel of rawModels as OpenRouterRawModelInfo[]) {
 				const supportThinking = rawModel.supported_parameters?.some((p) => p === "include_reasoning")
 				const modelInfo = OpenRouterModelInfo.create({
-					maxTokens: rawModel.top_provider?.max_completion_tokens ?? 0,
-					contextWindow: rawModel.context_length ?? 0,
+					maxTokens: numberToString(rawModel.top_provider?.max_completion_tokens ?? 0),
+					contextWindow: numberToString(rawModel.context_length ?? 0),
 					supportsImages: rawModel.architecture?.modality?.includes("image") ?? false,
 					supportsPromptCache: false,
 					inputPrice: parsePrice(rawModel.pricing?.prompt) ?? 0,
@@ -174,14 +175,14 @@ export async function refreshOpenRouterModels(
 						// forcing kimi-k2 to use the together provider for full context and best throughput
 						modelInfo.inputPrice = 1
 						modelInfo.outputPrice = 3
-						modelInfo.contextWindow = 131_000
+						modelInfo.contextWindow = numberToString(131_000)
 						break
 					case "openai/gpt-5":
 					case "openai/gpt-5-chat":
 					case "openai/gpt-5-mini":
 					case "openai/gpt-5-nano":
-						modelInfo.maxTokens = 8_192 // 128000 breaks context window truncation
-						modelInfo.contextWindow = 272_000 // openrouter reports 400k but the input limit is actually 400k-128k
+						modelInfo.maxTokens = numberToString(8_192) // 128000 breaks context window truncation
+						modelInfo.contextWindow = numberToString(272_000) // openrouter reports 400k but the input limit is actually 400k-128k
 						break
 					default:
 						if (rawModel.id.startsWith("openai/")) {
@@ -206,7 +207,7 @@ export async function refreshOpenRouterModels(
 				// add custom :1m model variant
 				if (rawModel.id === "anthropic/claude-sonnet-4") {
 					const claudeSonnet41mModelInfo = cloneDeep(modelInfo)
-					claudeSonnet41mModelInfo.contextWindow = 1_000_000 // limiting providers to those that support 1m context window
+					claudeSonnet41mModelInfo.contextWindow = numberToString(1_000_000) // limiting providers to those that support 1m context window
 					claudeSonnet41mModelInfo.tiers = CLAUDE_SONNET_4_1M_TIERS
 					models[openRouterClaudeSonnet41mModelId] = claudeSonnet41mModelInfo
 				}
@@ -214,8 +215,8 @@ export async function refreshOpenRouterModels(
 
 			// Add hardcoded cline/sonic model
 			models["cline/sonic"] = OpenRouterModelInfo.create({
-				maxTokens: clineMicrowaveAlphaModelInfo.maxTokens ?? 0,
-				contextWindow: clineMicrowaveAlphaModelInfo.contextWindow ?? 0,
+				maxTokens: numberToString(clineMicrowaveAlphaModelInfo.maxTokens ?? 0),
+				contextWindow: numberToString(clineMicrowaveAlphaModelInfo.contextWindow ?? 0),
 				supportsImages: clineMicrowaveAlphaModelInfo.supportsImages ?? false,
 				supportsPromptCache: clineMicrowaveAlphaModelInfo.supportsPromptCache ?? false,
 				inputPrice: clineMicrowaveAlphaModelInfo.inputPrice ?? 0,
